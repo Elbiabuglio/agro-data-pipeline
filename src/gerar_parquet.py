@@ -118,15 +118,16 @@ def configurar_logging() -> logging.Logger:
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
 
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.INFO)
-    ch.setFormatter(logging.Formatter(fmt, datefmt))
-    logger.addHandler(ch)
+    if not logger.handlers:
+        ch = logging.StreamHandler(sys.stdout)
+        ch.setLevel(logging.INFO)
+        ch.setFormatter(logging.Formatter(fmt, datefmt))
+        logger.addHandler(ch)
 
-    fh = logging.FileHandler("sidra_scraper.log", encoding="utf-8")
-    fh.setLevel(logging.DEBUG)
-    fh.setFormatter(logging.Formatter(fmt, datefmt))
-    logger.addHandler(fh)
+        fh = logging.FileHandler("sidra_scraper.log", encoding="utf-8")
+        fh.setLevel(logging.DEBUG)
+        fh.setFormatter(logging.Formatter(fmt, datefmt))
+        logger.addHandler(fh)
 
     return logger
 
@@ -436,29 +437,36 @@ def salvar_json(df: pd.DataFrame, nome_base: str) -> Path:
 
 def salvar_parquet(df: pd.DataFrame, nome_base: str) -> Optional[Path]:
     """
-    Salva o DataFrame em Parquet com compressão Snappy.
+    Salva o DataFrame em Parquet com compressão Snappy usando pyarrow.
 
-    Requer pyarrow (já presente no ambiente):
-        pyarrow==21.0.0
+    Usa engine='pyarrow' explicitamente para evitar fallback silencioso
+    para fastparquet (que pode não estar instalado).
+
+    Requer pyarrow:
+        pip install pyarrow
 
     Args:
         df:        DataFrame a salvar.
         nome_base: Nome base sem extensão.
 
     Returns:
-        Path do arquivo Parquet gerado, ou None se pyarrow indisponível.
+        Path do arquivo Parquet gerado, ou None em caso de falha.
     """
     pasta = PASTA_SAIDA / "parquet"
     pasta.mkdir(parents=True, exist_ok=True)
     arq = pasta / f"{nome_base}.parquet"
 
     try:
-        df.to_parquet(arq, index=False, compression="snappy")
+        import pyarrow  # valida disponibilidade antes de chamar pandas
+        log.debug("pyarrow versão: %s", pyarrow.__version__)
+        df.to_parquet(arq, index=False, compression="snappy", engine="pyarrow")
         log.info("Parquet → %s  (%.1f KB)", arq, arq.stat().st_size / 1024)
         return arq
     except ImportError:
-        log.warning("pyarrow não encontrado — Parquet ignorado.")
-        log.warning("Execute: pip install pyarrow")
+        log.error("pyarrow não encontrado. Execute: pip install pyarrow")
+        return None
+    except Exception as exc:
+        log.error("Erro ao salvar Parquet: %s", exc)
         return None
 
 
@@ -481,9 +489,9 @@ def salvar_manifesto(arquivos: dict) -> None:
         "gerado_em" : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "arquivos"  : {
             fmt: {
-                "path"         : str(arq),
-                "tamanho_kb"   : round(arq.stat().st_size / 1024, 2),
-                "salvo_em"     : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "path"      : str(arq),
+                "tamanho_kb": round(arq.stat().st_size / 1024, 2),
+                "salvo_em"  : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
             for fmt, arq in arquivos.items() if arq
         },
@@ -503,10 +511,10 @@ def main() -> None:
     Coleta dados da API IBGE/SIDRA e salva nos 3 formatos da camada Raw.
 
     Sequência:
-        1. coletar()        → busca dados na API SIDRA
-        2. salvar_csv()     → data/raw/csv/
-        3. salvar_json()    → data/raw/json/
-        4. salvar_parquet() → data/raw/parquet/
+        1. coletar()          → busca dados na API SIDRA
+        2. salvar_csv()       → data/raw/csv/
+        3. salvar_json()      → data/raw/json/
+        4. salvar_parquet()   → data/raw/parquet/
         5. salvar_manifesto() → data/raw/_manifesto.json
     """
     log.info("=" * 55)
@@ -522,7 +530,7 @@ def main() -> None:
         log.error("Nenhum dado coletado. Verifique a conexão.")
         sys.exit(1)
 
-    nome = _nome_base()
+    nome        = _nome_base()
     arq_csv     = salvar_csv(df, nome)
     arq_json    = salvar_json(df, nome)
     arq_parquet = salvar_parquet(df, nome)
