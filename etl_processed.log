@@ -1,0 +1,136 @@
+2026-03-23 16:22:17 [INFO] =======================================================
+2026-03-23 16:22:17 [INFO] ETL — Camada Processed | agro-data-pipeline
+2026-03-23 16:22:17 [INFO] =======================================================
+2026-03-23 16:22:17 [INFO] [E] Extração
+2026-03-23 16:22:17 [INFO] Extraindo: ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 16:22:17 [INFO]   Shape bruto: 24 linhas × 15 colunas
+2026-03-23 16:22:17 [INFO] [T] Transformação
+2026-03-23 16:22:17 [INFO] Iniciando transformações...
+2026-03-23 16:22:17 [INFO]   [1/4] Corrigindo tipos de dados...
+2026-03-23 16:22:17 [INFO]     produto_cod   : int64  → str
+2026-03-23 16:22:17 [INFO]     tabela_sidra  : int64  → str
+2026-03-23 16:22:17 [INFO]     coletado_em   : str    → datetime
+2026-03-23 16:22:17 [INFO]     numéricas     : float64 com 2 casas decimais
+2026-03-23 16:22:17 [INFO]   [2/4] Tratando valores ausentes...
+2026-03-23 16:22:17 [INFO]     status_dado: 24 completos, 0 parciais
+2026-03-23 16:22:17 [INFO]   [3/4] Padronizando categorias...
+2026-03-23 16:22:17 [INFO]     produto           : normalizado via mapa canônico
+2026-03-23 16:22:17 [INFO]     produto_nome_ibge : nome original preservado
+2026-03-23 16:22:17 [INFO]     nivel_territorial : title case
+2026-03-23 16:22:17 [INFO]     unidade_qtd       : upper case
+2026-03-23 16:22:17 [INFO]     fonte             : upper case
+2026-03-23 16:22:17 [INFO]     Produtos após padronização:
+2026-03-23 16:22:17 [INFO]       → Azeitona
+2026-03-23 16:22:17 [INFO]       → Cacau
+2026-03-23 16:22:17 [INFO]       → Café (Em Grão) Canephora
+2026-03-23 16:22:17 [INFO]       → Erva-Mate (Folha Verde)
+2026-03-23 16:22:17 [INFO]       → Figo
+2026-03-23 16:22:17 [INFO]       → Goiaba
+2026-03-23 16:22:17 [INFO]       → Guaraná (Semente)
+2026-03-23 16:22:17 [INFO]       → Soja
+2026-03-23 16:22:17 [INFO]       → Sorgo
+2026-03-23 16:22:17 [INFO]       → Tomate
+2026-03-23 16:22:17 [INFO]       → Trigo
+2026-03-23 16:22:17 [INFO]       → Triticale
+2026-03-23 16:22:17 [INFO]   [4/4] Validando regras de negócio...
+2026-03-23 16:22:17 [INFO]     Validação concluída: 24/24 registros aprovados.
+2026-03-23 16:22:17 [INFO] Transformações concluídas: 24 linhas prontas para carga.
+2026-03-23 16:22:17 [INFO] [L] Carga no PostgreSQL
+2026-03-23 16:22:17 [INFO] Conectado: localhost:5433/agro_dw
+2026-03-23 16:22:17 [INFO] Schema 'processed' criado/verificado.
+2026-03-23 16:22:17 [INFO] Tabela 'processed.producao_agricola' criada/verificada.
+2026-03-23 16:22:17 [INFO] processed.producao_agricola: 24 linhas inseridas/atualizadas.
+2026-03-23 16:22:17 [INFO] ───────────────────────────────────────────────────────
+2026-03-23 16:22:17 [INFO] Verificação pós-carga — processed.producao_agricola
+2026-03-23 16:22:17 [INFO] ───────────────────────────────────────────────────────
+2026-03-23 16:22:17 [INFO]   Total de registros : 24
+2026-03-23 16:22:17 [INFO]   Por status_dado:
+2026-03-23 16:22:17 [INFO]     completo     → 24 registros
+2026-03-23 16:22:17 [INFO]   ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─  ─
+2026-03-23 16:22:17 [INFO]   Produto                 Ano         Área (ha)           Qtd (ton)          Valor (Mil R$)
+2026-03-23 16:22:17 [INFO]   ----------------------------------------------------------------------------------------
+2026-03-23 16:22:17 [INFO]   Soja                   2024       144,473,768         260,233,510              45,906,902
+2026-03-23 16:22:17 [INFO]   Trigo                  2024         7,520,178           8,770,270               2,916,018
+2026-03-23 16:22:17 [INFO]   Sorgo                  2024         4,090,428           2,706,132               1,363,415
+2026-03-23 16:22:17 [INFO]   Cacau                  2024           297,509          15,264,498                 617,168
+2026-03-23 16:22:17 [INFO]   Café (Em Grão) Cane    2024           993,992          18,209,944                 399,820
+2026-03-23 16:22:17 [INFO]   Erva-Mate (Folha Ve    2024           841,255           1,012,330                  90,216
+2026-03-23 16:22:17 [INFO]   Tomate                 2024         4,407,502           9,918,958                  60,576
+2026-03-23 16:22:17 [INFO]   Goiaba                 2024           557,225           1,385,628                  22,987
+2026-03-23 16:22:17 [INFO]   Triticale              2024            42,411              42,305                  15,967
+2026-03-23 16:22:17 [INFO]   Guaraná (Semente)      2024             2,663              68,031                   9,609
+2026-03-23 16:22:17 [INFO]   Azeitona               2024             4,499              23,978                   4,266
+2026-03-23 16:22:17 [INFO]   Figo                   2024            20,586             158,458                   1,951
+2026-03-23 16:22:17 [INFO]   Soja                   2023       152,144,238         348,683,454              44,417,552
+2026-03-23 16:22:17 [INFO]   Trigo                  2023         7,730,188           7,662,690               3,330,303
+2026-03-23 16:22:17 [INFO]   Sorgo                  2023         4,498,299           2,709,971               1,344,408
+2026-03-23 16:22:17 [INFO]   Cacau                  2023           296,114           4,633,462                 612,692
+2026-03-23 16:22:17 [INFO]   Café (Em Grão) Cane    2023           983,899          10,657,060                 391,006
+2026-03-23 16:22:17 [INFO]   Erva-Mate (Folha Ve    2023           736,193             956,804                  82,100
+2026-03-23 16:22:17 [INFO]   Tomate                 2023         4,166,017          10,592,486                  59,010
+2026-03-23 16:22:17 [INFO]   Triticale              2023            58,914              52,059                  24,585
+2026-03-23 16:22:17 [INFO]   Goiaba                 2023           586,003           1,313,952                  22,633
+2026-03-23 16:22:17 [INFO]   Guaraná (Semente)      2023             2,523              55,238                   9,663
+2026-03-23 16:22:17 [INFO]   Azeitona               2023             6,862              31,489                   3,856
+2026-03-23 16:22:17 [INFO]   Figo                   2023            20,881             128,050                   2,006
+2026-03-23 16:22:17 [INFO] ───────────────────────────────────────────────────────
+2026-03-23 16:22:17 [INFO] Conexão encerrada.
+2026-03-23 16:22:17 [INFO] =======================================================
+2026-03-23 16:22:17 [INFO] ETL concluído com sucesso.
+2026-03-23 16:22:17 [INFO] =======================================================
+2026-03-23 16:41:09 [INFO] =======================================================
+2026-03-23 16:41:09 [INFO] ETL — Camada Processed | agro-data-pipeline
+2026-03-23 16:41:09 [INFO] =======================================================
+2026-03-23 16:41:09 [INFO] [E] Extração
+2026-03-23 16:41:09 [INFO] Extraindo: ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 16:41:09 [INFO]   Shape bruto: 24 linhas × 15 colunas
+2026-03-23 16:41:09 [INFO] [T] Transformação
+2026-03-23 16:41:09 [INFO] Iniciando transformações...
+2026-03-23 16:41:09 [INFO]   [1/4] Corrigindo tipos de dados...
+2026-03-23 16:41:09 [INFO]     produto_cod   : int64  → str
+2026-03-23 16:41:09 [INFO]     tabela_sidra  : int64  → str
+2026-03-23 16:41:09 [INFO]     coletado_em   : str    → datetime
+2026-03-23 16:41:09 [INFO]     numéricas     : float64 com 2 casas decimais
+2026-03-23 16:41:09 [INFO]   [2/4] Tratando valores ausentes...
+2026-03-23 16:41:09 [INFO]     status_dado: 24 completos, 0 parciais
+2026-03-23 16:41:09 [INFO]   [3/4] Padronizando categorias...
+2026-03-23 16:41:09 [INFO]     produto           : normalizado via mapa canônico
+2026-03-23 16:41:09 [INFO]     produto_nome_ibge : nome original preservado
+2026-03-23 16:41:09 [INFO]     nivel_territorial : title case
+2026-03-23 16:41:09 [INFO]     unidade_qtd       : upper case
+2026-03-23 16:41:09 [INFO]     fonte             : upper case
+2026-03-23 16:41:09 [INFO]     Produtos após padronização:
+2026-03-23 16:41:09 [INFO]       → Azeitona
+2026-03-23 16:41:09 [INFO]       → Cacau
+2026-03-23 16:41:09 [INFO]       → Café (Em Grão) Canephora
+2026-03-23 16:41:09 [INFO]       → Erva-Mate (Folha Verde)
+2026-03-23 16:41:09 [INFO]       → Figo
+2026-03-23 16:41:09 [INFO]       → Goiaba
+2026-03-23 16:41:09 [INFO]       → Guaraná (Semente)
+2026-03-23 16:41:09 [INFO]       → Soja
+2026-03-23 16:41:09 [INFO]       → Sorgo
+2026-03-23 16:41:09 [INFO]       → Tomate
+2026-03-23 16:41:09 [INFO]       → Trigo
+2026-03-23 16:41:09 [INFO]       → Triticale
+2026-03-23 16:41:09 [INFO]   [4/4] Validando regras de negócio...
+2026-03-23 16:41:09 [INFO]     24/24 registros aprovados.
+2026-03-23 16:41:09 [INFO] Transformações concluídas: 24 linhas prontas para carga.
+2026-03-23 16:41:09 [INFO] [L] Salvando localmente em data/processed/
+2026-03-23 16:41:09 [INFO] CSV local → data\processed\ibge_pam_processed_20260323.csv  (7.6 KB)
+2026-03-23 16:41:09 [INFO] [L] Carga no PostgreSQL
+2026-03-23 16:41:09 [INFO] Conectado: localhost:5433/agro_dw
+2026-03-23 16:41:09 [INFO] Schema e tabela processed verificados.
+2026-03-23 16:41:09 [INFO] processed.producao_agricola: 24 linhas inseridas/atualizadas.
+2026-03-23 16:41:09 [INFO] ───────────────────────────────────────────────────────
+2026-03-23 16:41:09 [INFO] Verificação pós-carga
+2026-03-23 16:41:09 [INFO] ───────────────────────────────────────────────────────
+2026-03-23 16:41:09 [INFO]   Total de registros : 24
+2026-03-23 16:41:09 [INFO]   Por status_dado:
+2026-03-23 16:41:09 [INFO]     completo     → 24
+2026-03-23 16:41:09 [INFO] ───────────────────────────────────────────────────────
+2026-03-23 16:41:09 [INFO] Conexão encerrada.
+2026-03-23 16:41:09 [INFO] =======================================================
+2026-03-23 16:41:09 [INFO] ETL concluído com sucesso.
+2026-03-23 16:41:09 [INFO]   CSV local → data\processed\ibge_pam_processed_20260323.csv
+2026-03-23 16:41:09 [INFO]   PostgreSQL → processed.producao_agricola
+2026-03-23 16:41:09 [INFO] =======================================================

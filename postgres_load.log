@@ -1,0 +1,68 @@
+2026-03-23 00:41:34 [INFO] =======================================================
+2026-03-23 00:41:34 [INFO] PostgreSQL Load — agro-data-pipeline
+2026-03-23 00:41:34 [INFO] =======================================================
+2026-03-23 00:41:35 [INFO] Conectado ao PostgreSQL: localhost:5433/agro_dw
+2026-03-23 00:41:35 [INFO] Criando tabelas (IF NOT EXISTS)...
+2026-03-23 00:41:36 [INFO]   dim_commodity       ✔
+2026-03-23 00:41:36 [INFO]   dim_territorio      ✔
+2026-03-23 00:41:36 [INFO]   fato_producao       ✔
+2026-03-23 00:41:36 [INFO]   indexes             ✔
+2026-03-23 00:41:36 [INFO] Lendo: ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 00:41:36 [INFO]   24 linhas × 15 colunas
+2026-03-23 00:41:36 [INFO] dim_commodity: 12 produtos inseridos/verificados.
+2026-03-23 00:41:37 [INFO] dim_territorio: 1 territórios inseridos/verificados.
+2026-03-23 00:41:37 [INFO] fato_producao: 24 linhas inseridas/atualizadas, 0 ignoradas.
+2026-03-23 00:41:37 [INFO] ──────────────────────────────────────────────────
+2026-03-23 00:41:37 [INFO] Verificação pós-carga:
+2026-03-23 00:41:37 [INFO]   dim_commodity             12 linhas
+2026-03-23 00:41:37 [INFO]   dim_territorio            1 linhas
+2026-03-23 00:41:37 [INFO]   fato_producao             24 linhas
+2026-03-23 00:41:37 [INFO] ──────────────────────────────────────────────────
+2026-03-23 00:41:37 [INFO] Top 5 por valor de produção (ano mais recente com dados):
+2026-03-23 00:41:37 [INFO]   Produto                                Ano           Qtd (ton)        Valor (Mil R$)
+2026-03-23 00:41:37 [INFO]   --------------------------------------------------------------------------------
+2026-03-23 00:41:37 [INFO]   Soja (em grão)                        2024         260,233,510            45,906,902
+2026-03-23 00:41:37 [INFO]   Trigo (em grão)                       2024           8,770,270             2,916,018
+2026-03-23 00:41:37 [INFO]   Sorgo (em grão)                       2024           2,706,132             1,363,415
+2026-03-23 00:41:37 [INFO]   Cacau (em amêndoa)                    2024          15,264,498               617,168
+2026-03-23 00:41:37 [INFO]   Café (em grão) Canephora              2024          18,209,944               399,820
+2026-03-23 00:41:37 [INFO] ──────────────────────────────────────────────────
+2026-03-23 00:41:37 [INFO] FKs órfãs: 0 (OK)
+2026-03-23 00:41:37 [INFO] =======================================================
+2026-03-23 00:41:37 [INFO] Carga concluída com sucesso.
+2026-03-23 00:41:37 [INFO] =======================================================
+2026-03-23 00:41:37 [INFO] Conexão encerrada.
+2026-03-23 15:47:03 [INFO] =======================================================
+2026-03-23 15:47:03 [INFO] PostgreSQL Load — agro-data-pipeline
+2026-03-23 15:47:03 [INFO] =======================================================
+2026-03-23 15:47:04 [INFO] Conectado ao PostgreSQL: localhost:5433/agro_dw
+2026-03-23 15:47:04 [INFO] Criando tabelas (IF NOT EXISTS)...
+2026-03-23 15:47:04 [INFO]   dim_commodity       ✔
+2026-03-23 15:47:04 [INFO]   dim_territorio      ✔
+2026-03-23 15:47:04 [INFO]   fato_producao       ✔
+2026-03-23 15:47:04 [INFO]   indexes             ✔
+2026-03-23 15:47:04 [INFO] Lendo: ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 15:47:04 [INFO]   24 linhas × 15 colunas
+2026-03-23 15:47:04 [INFO] dim_commodity: 12 produtos inseridos/verificados.
+2026-03-23 15:47:05 [INFO] dim_territorio: 1 territórios inseridos/verificados.
+2026-03-23 15:47:05 [INFO] fato_producao: 24 linhas inseridas/atualizadas, 0 ignoradas.
+2026-03-23 15:47:05 [INFO] ──────────────────────────────────────────────────
+2026-03-23 15:47:05 [INFO] Verificação pós-carga:
+2026-03-23 15:47:05 [INFO]   dim_commodity             12 linhas
+2026-03-23 15:47:05 [INFO]   dim_territorio            1 linhas
+2026-03-23 15:47:05 [INFO]   fato_producao             24 linhas
+2026-03-23 15:47:05 [INFO] ──────────────────────────────────────────────────
+2026-03-23 15:47:05 [INFO] Top 5 por valor de produção (ano mais recente com dados):
+2026-03-23 15:47:05 [INFO]   Produto                                Ano           Qtd (ton)        Valor (Mil R$)
+2026-03-23 15:47:05 [INFO]   --------------------------------------------------------------------------------
+2026-03-23 15:47:05 [INFO]   Soja (em grão)                        2024         260,233,510            45,906,902
+2026-03-23 15:47:05 [INFO]   Trigo (em grão)                       2024           8,770,270             2,916,018
+2026-03-23 15:47:05 [INFO]   Sorgo (em grão)                       2024           2,706,132             1,363,415
+2026-03-23 15:47:05 [INFO]   Cacau (em amêndoa)                    2024          15,264,498               617,168
+2026-03-23 15:47:05 [INFO]   Café (em grão) Canephora              2024          18,209,944               399,820
+2026-03-23 15:47:05 [INFO] ──────────────────────────────────────────────────
+2026-03-23 15:47:05 [INFO] FKs órfãs: 0 (OK)
+2026-03-23 15:47:05 [INFO] =======================================================
+2026-03-23 15:47:05 [INFO] Carga concluída com sucesso.
+2026-03-23 15:47:05 [INFO] =======================================================
+2026-03-23 15:47:05 [INFO] Conexão encerrada.
