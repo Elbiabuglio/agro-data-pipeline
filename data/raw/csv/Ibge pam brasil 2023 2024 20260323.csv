@@ -1,0 +1,11 @@
+produto,produto_cod,nivel_territorial,cod_territorial,nome_territorial,ano,area_colhida_ha,qtd_produzida,unidade_qtd,rendimento_medio_kg_ha,valor_producao_mil_reais,fonte,tabela_sidra,url_origem,coletado_em
+Soja (em grão),40124,Brasil,1,Brasil,2024,,,Toneladas,,260233510.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2024/c782/40124",2026-03-23 01:46:48
+Soja (em grão),40124,Brasil,1,Brasil,2023,45056476.0,162360628.0,Toneladas,3604.0,245876543.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40124",2026-03-23 01:46:48
+Milho (em grão),40125,Brasil,1,Brasil,2024,,,Toneladas,,,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2024/c782/40125",2026-03-23 01:46:48
+Milho (em grão),40125,Brasil,1,Brasil,2023,22740065.0,137001311.0,Toneladas,6026.0,77434827.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40125",2026-03-23 01:46:48
+Café (em grão) Total,40132,Brasil,1,Brasil,2023,2194684.0,3557390.0,Toneladas,1621.0,49540313.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40132",2026-03-23 01:46:48
+Cana-de-açúcar,40135,Brasil,1,Brasil,2023,8614088.0,672270543.0,Toneladas,78043.0,79131817.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40135",2026-03-23 01:46:48
+Algodão herbáceo (em caroço),40126,Brasil,1,Brasil,2023,1696001.0,6945834.0,Toneladas,4096.0,28944059.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40126",2026-03-23 01:46:48
+Trigo (em grão),40133,Brasil,1,Brasil,2023,2795985.0,9905786.0,Toneladas,3543.0,8937440.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40133",2026-03-23 01:46:48
+Arroz (em casca),40128,Brasil,1,Brasil,2023,1701186.0,10629606.0,Toneladas,6248.0,7688143.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40128",2026-03-23 01:46:48
+Feijão (em grão),40131,Brasil,1,Brasil,2023,2897474.0,2888613.0,Toneladas,997.0,18505474.0,IBGE/PAM-SIDRA,5457,"https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023/c782/40131",2026-03-23 01:46:48

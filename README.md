@@ -1,81 +1,77 @@
-# 🌾 Agro Data Pipeline — IBGE/SIDRA
-
-Scraper da **API pública do IBGE/SIDRA** para coleta de dados de produção das
+🌾 Agro Data Pipeline — IBGE/SIDRA
+Scraper da API pública do IBGE/SIDRA para coleta de dados de produção das
 principais commodities agrícolas brasileiras.
+Pesquisa de referência: PAM — Produção Agrícola Municipal (Tabela 5457)
 
-Pesquisa de referência: **PAM — Produção Agrícola Municipal (Tabela 5457)**
+📋 Sumário
 
----
+Visão Geral
+Estrutura do Projeto
+Pré-requisitos
+Instalação
+Execução
+Configuração
+Camada Raw — Formatos de Arquivo
+Dados Coletados
+Commodities Disponíveis
+Estrutura do CSV
+Logging
+Arquitetura do Código
+Desafios Técnicos Tratados
+Fonte dos Dados
 
-## 📋 Sumário
 
-- [Visão Geral](#visão-geral)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação](#instalação)
-- [Execução](#execução)
-- [Configuração](#configuração)
-- [Dados Coletados](#dados-coletados)
-- [Commodities Disponíveis](#commodities-disponíveis)
-- [Estrutura do CSV](#estrutura-do-csv)
-- [Logging](#logging)
-- [Arquitetura do Código](#arquitetura-do-código)
-- [Desafios Técnicos Tratados](#desafios-técnicos-tratados)
-- [Fonte dos Dados](#fonte-dos-dados)
-
----
-
-## Visão Geral
-
+Visão Geral
 Este projeto captura dados anuais de produção agrícola diretamente da
-**API REST do IBGE/SIDRA**, sem autenticação e sem bloqueios.
+API REST do IBGE/SIDRA, sem autenticação e sem bloqueios, e persiste
+os dados brutos em três formatos na camada Raw: CSV, JSON e Parquet.
 
-> **Por que IBGE/SIDRA e não CEPEA?**
-> O site do CEPEA retorna HTTP 403 e timeout para requisições automatizadas,
-> inclusive com browser headless (Playwright). A API do IBGE/SIDRA é pública,
-> documentada e responde normalmente.
+Por que IBGE/SIDRA e não CEPEA?
+O site do CEPEA retorna HTTP 403 e timeout para requisições automatizadas,
+inclusive com browser headless (Playwright). A API do IBGE/SIDRA é pública,
+documentada e responde normalmente.
 
-**O que é coletado por produto e ano:**
+O que é coletado por produto e ano:
+VariávelDescriçãoUnidadearea_colhida_haÁrea colhidaHectaresqtd_produzidaQuantidade produzidaToneladas (varia por produto)rendimento_medio_kg_haRendimento médioKg/havalor_producao_mil_reaisValor da produçãoMil Reais
 
-| Variável | Descrição | Unidade |
-|----------|-----------|---------|
-| `area_colhida_ha` | Área colhida | Hectares |
-| `qtd_produzida` | Quantidade produzida | Toneladas (varia por produto) |
-| `rendimento_medio_kg_ha` | Rendimento médio | Kg/ha |
-| `valor_producao_mil_reais` | Valor da produção | Mil Reais |
-
----
-
-## Estrutura do Projeto
-
-```
+Estrutura do Projeto
 agro-data-pipeline/
 │
 ├── src/
-│   └── teste.py              # script principal
+│   ├── teste.py              # coleta dados e salva CSV + JSON
+│   ├── gerar_parquet.py      # coleta dados e salva CSV + JSON + Parquet
+│   └── raw_layer.py          # módulo reutilizável da camada Raw
 │
 ├── data/
 │   └── raw/
-│       └── ibge_pam_brasil_2023_2024_YYYYMMDD.csv   # saída gerada
+│       ├── csv/
+│       │   └── ibge_pam_brasil_2023_2024_YYYYMMDD.csv
+│       ├── json/
+│       │   └── ibge_pam_brasil_2023_2024_YYYYMMDD.json
+│       ├── parquet/
+│       │   └── ibge_pam_brasil_2023_2024_YYYYMMDD.parquet
+│       └── _manifesto.json
+│
+├── docs/
+│   └── camada_raw.md         # decisões de formato e organização AWS S3
 │
 ├── sidra_scraper.log         # log completo (DEBUG) gerado na execução
 ├── requirements.txt
+├── .env.example              # template de variáveis de ambiente
 └── README.md
-```
 
----
+Os arquivos em data/raw/ são ignorados pelo Git (.gitignore).
+O arquivo .env nunca deve ser versionado.
 
-## Pré-requisitos
 
-- Python **3.11+**
-- Conexão com a internet (acesso à API pública do IBGE)
+Pré-requisitos
 
----
+Python 3.11+
+Conexão com a internet (acesso à API pública do IBGE)
 
-## Instalação
 
-```bash
-# 1. Clone o repositório
+Instalação
+bash# 1. Clone o repositório
 git clone https://github.com/seu-usuario/agro-data-pipeline.git
 cd agro-data-pipeline
 
@@ -90,224 +86,164 @@ source venv/bin/activate
 
 # 3. Instale as dependências
 pip install -r requirements.txt
-```
 
-**`requirements.txt`:**
+# 4. Configure o .env
+copy .env.example .env      # Windows
+cp .env.example .env        # Linux / macOS
+requirements.txt:
+requests==2.32.4
+pandas==2.3.1
+python-dotenv==1.1.1
+pyarrow==21.0.0
 
-```
-requests>=2.31.0
-pandas>=2.0.0
-```
+Execução
+Coleta completa — CSV, JSON e Parquet (recomendado)
+bashpython src/gerar_parquet.py
+Este script é autossuficiente: coleta os dados da API e salva os 3 formatos
+de uma vez em data/raw/, sem depender de nenhum arquivo anterior.
+Coleta apenas CSV e JSON
+bashpython src/teste.py
+Exemplo de saída no terminal:
+2026-03-22 21:44:10 [INFO] =======================================================
+2026-03-22 21:44:10 [INFO] IBGE/SIDRA — Camada Raw (CSV + JSON + Parquet)
+2026-03-22 21:44:10 [INFO] Anos  : [2023, 2024]
+2026-03-22 21:44:10 [INFO] Nível : brasil (n1/all)
+2026-03-22 21:44:11 [INFO] Coletando 20 produtos | 3 blocos | anos: [2023, 2024]
+2026-03-22 21:44:11 [INFO] Bloco 1/3: soja, milho, algodao, amendoim, arroz, feijao, cafe, trigo
+2026-03-22 21:44:13 [INFO] Bloco 1/3: 64 registros recebidos.
+2026-03-22 21:44:15 [INFO] CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260322.csv  (8.4 KB)
+2026-03-22 21:44:15 [INFO] JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260322.json  (21.6 KB)
+2026-03-22 21:44:15 [INFO] Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260322.parquet  (4.6 KB)
+2026-03-22 21:44:15 [INFO] Manifesto → data\raw\_manifesto.json
+2026-03-22 21:44:15 [INFO] Concluído — 3 formatos salvos em data\raw
 
----
+Configuração
+As opções são lidas do arquivo .env. Copie o .env.example e ajuste:
+dotenv# Fonte de dados
+API_BASE_URL=https://apisidra.ibge.gov.br/values
+TABELA_SIDRA=5457
 
-## Execução
+# Coleta
+ANOS=2023,2024
+NIVEL=brasil          # brasil | uf | municipio
 
-```bash
-python src/teste.py
-```
+# Saída
+OUTPUT_DIR=data/raw
+ParâmetroOpçõesDescriçãoANOSlista separada por vírgulaAnos da série histórica desejadaNIVELbrasil1 linha por produto/ano (nível nacional)uf27 linhas por produto/ano (por estado)municipioaté 5.565 linhas por produto/ano (por município)OUTPUT_DIRqualquer caminhoPasta raiz onde os subdiretórios serão criados
 
-Só isso. Nenhum argumento necessário.
+⚠️ O nível municipio gera arquivos grandes. Para 20 produtos × 2 anos,
+são aproximadamente 200.000 linhas no Parquet final.
 
-O script irá:
 
-1. Conectar na API IBGE/SIDRA
-2. Coletar todos os produtos para os anos configurados
-3. Salvar o CSV em `data/raw/`
-4. Exibir o relatório no terminal
+Camada Raw — Formatos de Arquivo
+Os dados brutos são salvos em 3 formatos dentro de data/raw/, cada um
+em sua própria subpasta. Todos os arquivos compartilham o mesmo nome base,
+diferindo apenas na extensão:
+ibge_pam_{nivel}_{anos}_{YYYYMMDD}.{ext}
+Comparativo de formatos
+CritérioCSVJSONParquetLegível por humanos✅✅❌Preserva tipos de dado❌⚠️ parcial✅Compressão nativa❌❌✅ SnappyLeitura colunar❌❌✅Compatível com Athena/Spark⚠️⚠️✅Ideal para auditoria manual✅✅❌
+Tamanho real (20 produtos × 2 anos × nível brasil)
+FormatoTamanhoRelativo ao CSVCSV8,4 KB100%JSON21,6 KB257%Parquet (Snappy)~4,6 KB~55%
 
-**Exemplo de saída no terminal:**
+Em datasets com milhões de linhas (nível município), o Parquet chega a ser
+10–20× menor que CSV pela combinação de armazenamento colunar e compressão.
 
-```
-2024-03-22 21:44:10 [INFO] sidra — ═══════════════════════════════════════════════════════
-2024-03-22 21:44:10 [INFO] sidra — IBGE/SIDRA — PAM Tabela 5457
-2024-03-22 21:44:10 [INFO] sidra — Anos    : [2023, 2024]
-2024-03-22 21:44:10 [INFO] sidra — Nível   : brasil (n1/all)
-2024-03-22 21:44:10 [INFO] sidra — Saída   : C:\...\data\raw
-2024-03-22 21:44:10 [INFO] sidra — Iniciando coleta — 20 produtos | 3 blocos | anos: [2023, 2024]
-2024-03-22 21:44:11 [INFO] sidra — Bloco 1/3: soja, milho, algodao, amendoim, arroz, feijao, cafe, trigo
-2024-03-22 21:44:11 [INFO] sidra — Bloco 1/3: 64 registros recebidos.
-...
-2024-03-22 21:44:15 [INFO] sidra — CSV salvo em: data\raw\ibge_pam_brasil_2023_2024_20240322.csv
-```
+Por que salvar os 3 formatos?
 
----
+CSV — auditoria manual, abertura no Excel, integração com sistemas legados
+JSON — envelope com metadados da coleta embutidos (fonte, URL, timestamp)
+Parquet — padrão de Data Lakes, compatível com AWS Athena, Spark e DuckDB
 
-## Configuração
+Para detalhes sobre organização no AWS S3 e consulta via Athena,
+veja docs/camada_raw.md.
+Manifesto (_manifesto.json)
+Cada execução gera um manifesto na raiz de data/raw/ com metadados
+de todos os arquivos salvos:
+json{
+  "pipeline": "agro-data-pipeline",
+  "camada": "raw",
+  "fonte": "IBGE/PAM-SIDRA",
+  "tabela": "5457",
+  "nivel": "brasil",
+  "anos": [2023, 2024],
+  "gerado_em": "2026-03-22 21:44:15",
+  "arquivos": {
+    "csv":     { "path": "data/raw/csv/ibge_pam_brasil_2023_2024_20260322.csv",        "tamanho_kb": 8.22  },
+    "json":    { "path": "data/raw/json/ibge_pam_brasil_2023_2024_20260322.json",      "tamanho_kb": 21.60 },
+    "parquet": { "path": "data/raw/parquet/ibge_pam_brasil_2023_2024_20260322.parquet","tamanho_kb": 4.61  }
+  }
+}
 
-Todas as opções ficam nas **3 primeiras constantes** do arquivo `src/teste.py`:
+Dados Coletados
+A Tabela 5457 do SIDRA cobre lavouras temporárias e permanentes,
+com dados anuais desde 1974 até o ano mais recente publicado.
+Exemplo de linha no CSV
+produtoanoarea_colhida_haqtd_produzidaunidade_qtdrendimento_medio_kg_havalor_producao_mil_reaisSoja (em grão)202345.056.476162.360.628Toneladas3.604245.876.543Milho (em grão)202322.740.065137.001.311Toneladas6.02677.434.827Café (em grão) Total20232.194.6843.557.390Toneladas1.62149.540.313Cana-de-açúcar20238.614.088672.270.543Toneladas78.04379.131.817
 
-```python
-ANOS        = [2023, 2024]      # anos a coletar
-NIVEL       = "brasil"          # "brasil" | "uf" | "municipio"
-PASTA_SAIDA = Path("data/raw")  # destino do CSV
-```
+Commodities Disponíveis
+Chave internaCódigo SIDRANome oficial IBGEsoja40124Soja (em grão)milho40125Milho (em grão)algodao40126Algodão herbáceo (em caroço)amendoim40127Amendoim (em casca)arroz40128Arroz (em casca)feijao40131Feijão (em grão)cafe40132Café (em grão) Totaltrigo40133Trigo (em grão)cana40135Cana-de-açúcarmandioca40138Mandiocasorgo40141Sorgo (em grão)girassol40147Girassol (em grão)aveia40148Aveia (em grão)cevada40149Cevada (em grão)triticale40150Triticale (em grão)laranja40199Laranjabanana40186Banana (cacho)cacau40190Cacau (em amêndoa)borracha40218Borracha (látex coagulado)sisal40228Sisal ou agave (fibra)
 
-| Parâmetro | Opções | Descrição |
-|-----------|--------|-----------|
-| `ANOS` | qualquer lista de inteiros | Anos da série histórica desejada |
-| `NIVEL` | `"brasil"` | 1 linha por produto/ano (nível nacional) |
-| | `"uf"` | 27 linhas por produto/ano (por estado) |
-| | `"municipio"` | até 5.565 linhas por produto/ano (por município) |
-| `PASTA_SAIDA` | qualquer `Path` | Pasta onde o CSV será salvo |
+Estrutura do CSV
+Nome do arquivo: ibge_pam_{nivel}_{anos}_{YYYYMMDD}.csv
+Encoding: UTF-8 com BOM (utf-8-sig) — compatível com Excel sem configuração extra.
+ColunaTipoDescriçãoprodutostrNome oficial do produto (ex: "Soja (em grão)")produto_codstrCódigo SIDRA do produto (ex: "40124")nivel_territorialstr"Brasil", "Unidade da Federação" ou "Município"cod_territorialstrCódigo IBGE do territórionome_territorialstrNome do território (ex: "Mato Grosso")anoInt64Ano de referênciaarea_colhida_hafloatÁrea colhida em hectaresqtd_produzidafloatQuantidade produzida (ver unidade_qtd)unidade_qtdstrUnidade de qtd_produzida (ex: "Toneladas", "Mil frutos")rendimento_medio_kg_hafloatRendimento médio em Kg/havalor_producao_mil_reaisfloatValor da produção em Mil ReaisfontestrSempre "IBGE/PAM-SIDRA"tabela_sidrastrSempre "5457"url_origemstrURL exata da requisição feita à APIcoletado_emstrTimestamp da coleta (YYYY-MM-DD HH:MM:SS)
 
-> ⚠️ O nível `"municipio"` gera arquivos grandes. Para 20 produtos × 2 anos,
-> são aproximadamente **200.000 linhas** no CSV final.
+Valores ausentes: células com NaN indicam que o IBGE não publicou
+o dado para aquela combinação (produto × ano × território). Na API,
+esses casos chegam como "-" (não disponível), "..." (em apuração)
+ou "X" (sigiloso — municípios com poucos produtores).
 
----
 
-## Dados Coletados
+Logging
+Todos os scripts utilizam dois handlers simultâneos:
+HandlerNívelDestinoConteúdoStreamHandlerINFOTerminalProgresso da coleta e relatório finalFileHandlerDEBUGsidra_scraper.logURLs completas, contagens detalhadas, pausas
+Formato:
+2026-03-22 21:44:10 [INFO] sidra — Bloco 1/3: soja, milho, algodao ...
+2026-03-22 21:44:10 [DEBUG] sidra — GET https://apisidra.ibge.gov.br/values/t/5457/...
+Para ver os logs DEBUG no terminal durante o desenvolvimento, altere
+o nível do StreamHandler em configurar_logging():
+pythonch.setLevel(logging.DEBUG)
 
-A Tabela 5457 do SIDRA cobre lavouras **temporárias e permanentes**,
-com dados anuais desde **1974** até o ano mais recente publicado.
-
-### Exemplo de linha no CSV
-
-| produto | ano | area_colhida_ha | qtd_produzida | unidade_qtd | rendimento_medio_kg_ha | valor_producao_mil_reais |
-|---------|-----|----------------:|---------------:|------------|----------------------:|------------------------:|
-| Soja (em grão) | 2023 | 45.056.476 | 162.360.628 | Toneladas | 3.604 | 245.876.543 |
-| Milho (em grão) | 2023 | 22.740.065 | 137.001.311 | Toneladas | 6.026 | 77.434.827 |
-| Café (em grão) Total | 2023 | 2.194.684 | 3.557.390 | Toneladas | 1.621 | 49.540.313 |
-| Cana-de-açúcar | 2023 | 8.614.088 | 672.270.543 | Toneladas | 78.043 | 79.131.817 |
-
----
-
-## Commodities Disponíveis
-
-| Chave interna | Código SIDRA | Nome oficial IBGE |
-|---------------|:------------:|-------------------|
-| `soja` | 40124 | Soja (em grão) |
-| `milho` | 40125 | Milho (em grão) |
-| `algodao` | 40126 | Algodão herbáceo (em caroço) |
-| `amendoim` | 40127 | Amendoim (em casca) |
-| `arroz` | 40128 | Arroz (em casca) |
-| `feijao` | 40131 | Feijão (em grão) |
-| `cafe` | 40132 | Café (em grão) Total |
-| `trigo` | 40133 | Trigo (em grão) |
-| `cana` | 40135 | Cana-de-açúcar |
-| `mandioca` | 40138 | Mandioca |
-| `sorgo` | 40141 | Sorgo (em grão) |
-| `girassol` | 40147 | Girassol (em grão) |
-| `aveia` | 40148 | Aveia (em grão) |
-| `cevada` | 40149 | Cevada (em grão) |
-| `triticale` | 40150 | Triticale (em grão) |
-| `laranja` | 40199 | Laranja |
-| `banana` | 40186 | Banana (cacho) |
-| `cacau` | 40190 | Cacau (em amêndoa) |
-| `borracha` | 40218 | Borracha (látex coagulado) |
-| `sisal` | 40228 | Sisal ou agave (fibra) |
-
----
-
-## Estrutura do CSV
-
-**Nome do arquivo:** `ibge_pam_{nivel}_{anos}_{YYYYMMDD}.csv`
-
-**Encoding:** UTF-8 com BOM (`utf-8-sig`) — compatível com Excel sem configuração extra.
-
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| `produto` | `str` | Nome oficial do produto (ex: `"Soja (em grão)"`) |
-| `produto_cod` | `str` | Código SIDRA do produto (ex: `"40124"`) |
-| `nivel_territorial` | `str` | `"Brasil"`, `"Unidade da Federação"` ou `"Município"` |
-| `cod_territorial` | `str` | Código IBGE do território |
-| `nome_territorial` | `str` | Nome do território (ex: `"Mato Grosso"`) |
-| `ano` | `Int64` | Ano de referência |
-| `area_colhida_ha` | `float` | Área colhida em hectares |
-| `qtd_produzida` | `float` | Quantidade produzida (ver `unidade_qtd`) |
-| `unidade_qtd` | `str` | Unidade de `qtd_produzida` (ex: `"Toneladas"`, `"Mil frutos"`) |
-| `rendimento_medio_kg_ha` | `float` | Rendimento médio em Kg/ha |
-| `valor_producao_mil_reais` | `float` | Valor da produção em Mil Reais |
-| `fonte` | `str` | Sempre `"IBGE/PAM-SIDRA"` |
-| `tabela_sidra` | `str` | Sempre `"5457"` |
-| `url_origem` | `str` | URL exata da requisição feita à API |
-| `coletado_em` | `str` | Timestamp da coleta (`YYYY-MM-DD HH:MM:SS`) |
-
-> **Valores ausentes:** células com `NaN` indicam que o IBGE não publicou
-> o dado para aquela combinação (produto × ano × território). Na API,
-> esses casos chegam como `"-"` (não disponível), `"..."` (em apuração)
-> ou `"X"` (sigiloso — municípios com poucos produtores).
-
----
-
-## Logging
-
-O script utiliza dois handlers simultâneos:
-
-| Handler | Nível | Destino | Conteúdo |
-|---------|-------|---------|----------|
-| `StreamHandler` | `INFO` | Terminal | Progresso da coleta e relatório final |
-| `FileHandler` | `DEBUG` | `sidra_scraper.log` | URLs completas, contagens detalhadas, pausas |
-
-**Formato:**
-```
-2024-03-22 21:44:10 [INFO] sidra — Bloco 1/3: soja, milho, algodao ...
-2024-03-22 21:44:10 [DEBUG] sidra — GET https://apisidra.ibge.gov.br/values/t/5457/...
-```
-
-Para ver os logs DEBUG no terminal durante o desenvolvimento, altere o nível do `StreamHandler` em `configurar_logging()`:
-
-```python
-ch.setLevel(logging.DEBUG)
-```
-
----
-
-## Arquitetura do Código
-
-```
+Arquitetura do Código
+src/teste.py — coleta + CSV e JSON
 main()
- └── coletar()
-      ├── get_json()          # HTTP GET com retry exponencial
-      ├── parse_sidra()       # JSON bruto → lista de dicts (formato longo)
-      │    └── safe_num()     # converte valores especiais da API para float
-      └── pivotar()           # formato longo → largo (pivot por variável)
- └── salvar()                 # DataFrame → CSV em data/raw/
- └── sumario()                # relatório final via logging
-```
+ ├── coletar()
+ │    ├── get_json()       # HTTP GET com retry exponencial
+ │    ├── parse_sidra()    # JSON bruto → lista de dicts (formato longo)
+ │    │    └── safe_num()  # converte valores especiais da API para float
+ │    └── pivotar()        # formato longo → largo (pivot por variável)
+ ├── salvar()              # DataFrame → CSV em data/raw/csv/
+ └── sumario()             # relatório final via logging
+src/gerar_parquet.py — coleta + CSV + JSON + Parquet (recomendado)
+main()
+ ├── coletar()               # coleta da API IBGE/SIDRA
+ ├── salvar_csv()            # → data/raw/csv/
+ ├── salvar_json()           # → data/raw/json/  (com envelope de metadados)
+ ├── salvar_parquet()        # → data/raw/parquet/  (compressão Snappy)
+ └── salvar_manifesto()      # → data/raw/_manifesto.json
+src/raw_layer.py — módulo reutilizável da camada Raw
+Funções independentes de salvamento que podem ser importadas por outros
+scripts do pipeline:
+pythonfrom raw_layer import salvar_raw
 
-### Fluxo de dados
-
-```
+salvar_raw(df, pasta_base=Path("data/raw"), nivel="brasil", anos=[2023, 2024])
+Fluxo de dados
 API IBGE/SIDRA
-     │
-     │  JSON (1 linha por variável × produto × ano × território)
-     ▼
-parse_sidra()    →   formato longo
-     │
-     ▼
-pivotar()        →   formato largo (1 linha por produto × ano × território)
-     │
-     ▼
-salvar()         →   data/raw/ibge_pam_brasil_2023_2024_YYYYMMDD.csv
-```
+      │
+      │  JSON (1 linha por variável × produto × ano × território)
+      ▼
+parse_sidra()      →   formato longo
+      │
+      ▼
+pivotar()          →   formato largo (1 linha por produto × ano × território)
+      │
+      ├──► salvar_csv()       →   data/raw/csv/ibge_pam_brasil_2023_2024_YYYYMMDD.csv
+      ├──► salvar_json()      →   data/raw/json/ibge_pam_brasil_2023_2024_YYYYMMDD.json
+      ├──► salvar_parquet()   →   data/raw/parquet/ibge_pam_brasil_2023_2024_YYYYMMDD.parquet
+      └──► salvar_manifesto() →   data/raw/_manifesto.json
 
----
+Desafios Técnicos Tratados
+#DesafioSolução1CEPEA retorna HTTP 403 e timeoutMigração para API pública IBGE/SIDRA2API retorna valores especiais (-, ..., X)safe_num() converte tudo para None / NaN3Formato longo (1 linha por variável)pivotar() transforma em 1 linha por registro4Unidade de qtd_produzida varia por produtoColuna unidade_qtd preservada antes do pivot5URLs longas com muitos produtosColeta em blocos de 8 produtos por requisição6Rate limiting esporádicoRetry com back-off linear (25s × tentativa)7Timeout de redeRetry com back-off (8s × tentativa), até 5 tentativas8Dados sigilosos em municípios pequenos (X)Tratados como None, nunca como zero9Configuração hardcodedVariáveis lidas do .env via python-dotenv10Sem rastreabilidade dos arquivos gerados_manifesto.json criado a cada execução
 
-## Desafios Técnicos Tratados
-
-| # | Desafio | Solução |
-|---|---------|---------|
-| 1 | **CEPEA retorna HTTP 403 e timeout** | Migração para API pública IBGE/SIDRA |
-| 2 | **API retorna valores especiais** (`-`, `...`, `X`) | `safe_num()` converte tudo para `None` / `NaN` |
-| 3 | **Formato longo** (1 linha por variável) | `pivotar()` transforma em 1 linha por registro |
-| 4 | **Unidade de `qtd_produzida` varia por produto** | Coluna `unidade_qtd` preservada antes do pivot |
-| 5 | **URLs longas com muitos produtos** | Coleta em blocos de 8 produtos por requisição |
-| 6 | **Rate limiting esporádico** | Retry com back-off linear (25s × tentativa) |
-| 7 | **Timeout de rede** | Retry com back-off (8s × tentativa), até 5 tentativas |
-| 8 | **Dados sigilosos em municípios pequenos** (`X`) | Tratados como `None`, nunca como zero |
-
----
-
-## Fonte dos Dados
-
-| Item | Detalhe |
-|------|---------|
-| **Pesquisa** | Produção Agrícola Municipal (PAM) |
-| **Tabela SIDRA** | [5457](https://sidra.ibge.gov.br/tabela/5457) |
-| **API** | https://apisidra.ibge.gov.br |
-| **Documentação da API** | https://apisidra.ibge.gov.br/home/ajuda |
-| **Periodicidade** | Anual |
-| **Série histórica** | 1974 – ano mais recente publicado |
-| **Cobertura** | Brasil, 27 UFs, 5.565 municípios |
-| **Licença dos dados** | [Creative Commons BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.pt_BR) |
+Fonte dos Dados
+ItemDetalhePesquisaProdução Agrícola Municipal (PAM)Tabela SIDRA5457APIhttps://apisidra.ibge.gov.brDocumentação da APIhttps://apisidra.ibge.gov.br/home/ajudaPeriodicidadeAnualSérie histórica1974 – ano mais recente publicadoCoberturaBrasil, 27 UFs, 5.565 municípiosLicença dos dadosCreative Commons BY 4.0

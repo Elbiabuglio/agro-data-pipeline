@@ -1,0 +1,24 @@
+{
+  "pipeline": "agro-data-pipeline",
+  "camada": "raw",
+  "fonte": "IBGE/PAM-SIDRA",
+  "tabela": "5457",
+  "nivel": "brasil",
+  "anos": [
+    2023,
+    2024
+  ],
+  "gerado_em": "2026-03-22 23:33:51",
+  "arquivos": {
+    "csv": {
+      "path": "data\\raw\\csv\\ibge_pam_brasil_2023_2024_20260322.csv",
+      "tamanho_kb": 6.37,
+      "salvo_em": "2026-03-22 23:33:51"
+    },
+    "json": {
+      "path": "data\\raw\\json\\ibge_pam_brasil_2023_2024_20260322.json",
+      "tamanho_kb": 15.81,
+      "salvo_em": "2026-03-22 23:33:51"
+    }
+  }
+}
