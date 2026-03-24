@@ -34,20 +34,6 @@ graph TD
     F --> G[Dashboard Streamlit]
     E --> H[src/eda.py - Gráficos]
 
----
-
-## 🏗️ Arquitetura do Fluxo
-
-```mermaid
-graph TD
-    A[API IBGE/SIDRA] --> B[src/gerar_parquet.py]
-    B --> C[(Data Lake: Raw)]
-    C --> D[src/etl_processed.py]
-    D --> E[(Data Lake: Processed)]
-    E --> F[(PostgreSQL)]
-    F --> G[Dashboard Streamlit]
-    E --> H[src/eda.py - Gráficos]
-
 📂 Estrutura de Pastas
 
 agro-data-pipeline/
