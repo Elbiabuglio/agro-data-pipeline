@@ -61,7 +61,6 @@ A arquitetura segue o modelo de **Medalhão Simplificado**, com separação por 
 * **Raw:** Ingestão de dados brutos em múltiplos formatos (CSV, JSON, Parquet).
 * **Processed:** Limpeza, tipagem e normalização dos dados.
 * **Storage/Analytics:** Carga final em PostgreSQL para consumo analítico via SQL.
-* **🆕 Dashboard:** Interface web interativa para visualização e análise dos dados.
 
 ---
 
