@@ -23,8 +23,7 @@ A arquitetura segue o modelo de **Medalhão Simplificado**, com separação por 
 
 ---
 ## 🏗️ Arquitetura do Fluxo
-
-```mermaid
+```
 graph TD
     A[API IBGE/SIDRA] --> B[src/gerar_parquet.py]
     B --> C[(Data Lake: Raw)]
