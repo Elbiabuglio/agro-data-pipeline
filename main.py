@@ -1,120 +1,168 @@
-"""
-main.py
-=======
-Ponto de entrada único do pipeline agro-data-pipeline.
-
-Orquestra todas as etapas em sequência:
-    1. Configuração  — carrega .env e inicializa logging
-    2. Coleta        — busca dados na API IBGE/SIDRA (PAM Tabela 5457)
-    3. Camada Raw    — persiste dados brutos em CSV, JSON e Parquet
-    4. Manifesto     — registra metadados dos arquivos gerados
-    5. Sumário       — exibe relatório final no terminal
-
-Execução:
-    python main.py
-"""
-
-import logging
+import argparse
+import subprocess
 import sys
-from datetime import datetime
+import logging
+from pathlib import Path
+import time
 
-from src.gerar_parquet import (
-    ANOS,
-    NIVEL,
-    NIVEIS,
-    PASTA_SAIDA,
-    TABELA,
-    coletar,
-    configurar_logging,
-    salvar_csv,
-    salvar_json,
-    salvar_manifesto,
-    salvar_parquet,
-    _nome_base,
+# Configuração de logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('pipeline.log'),
+        logging.StreamHandler()
+    ]
 )
+log = logging.getLogger(__name__)
 
+def executar_pipeline():
+    """Executa o pipeline completo de dados."""
+    log.info("🚀 Iniciando pipeline de dados...")
+    
+    scripts = [
+        "src/data_collection.py",
+        "src/data_processing.py", 
+        "src/data_analysis.py"
+    ]
+    
+    for script in scripts:
+        script_path = Path(script)
+        if not script_path.exists():
+            log.warning(f"⚠️ Script {script} não encontrado, pulando...")
+            continue
+            
+        log.info(f"▶️ Executando {script}...")
+        try:
+            result = subprocess.run([sys.executable, script], check=True, capture_output=True, text=True)
+            log.info(f"✅ {script} executado com sucesso")
+        except subprocess.CalledProcessError as e:
+            log.error(f"❌ Erro ao executar {script}: {e}")
+            log.error(f"Saída do erro: {e.stderr}")
+            return False
+    
+    log.info("🎉 Pipeline executado com sucesso!")
+    return True
 
-# ──────────────────────────────────────────────────────────────
-#  LOGGING
-# ──────────────────────────────────────────────────────────────
+def executar_dashboard():
+    """Executa o dashboard Streamlit."""
+    dashboard_path = Path("app_dashboard.py")
+    if not dashboard_path.exists():
+        log.error("❌ Arquivo app_dashboard.py não encontrado")
+        return
+    
+    log.info("📊 Iniciando dashboard...")
+    subprocess.run([sys.executable, "-m", "streamlit", "run", "app_dashboard.py"])
 
-log = configurar_logging()
+def executar_eda():
+    """Executa análise exploratória de dados."""
+    eda_path = Path("src/eda.py")
+    if not eda_path.exists():
+        log.error("❌ Arquivo src/eda.py não encontrado")
+        return
+    
+    log.info("📊 Executando análise exploratória...")
+    subprocess.run([sys.executable, "src/eda.py"])
 
+def verificar_status():
+    """Verifica o status dos arquivos e dependências."""
+    log.info("🔍 Verificando status do sistema...")
+    
+    arquivos_necessarios = [
+        "src/data_collection.py",
+        "src/data_processing.py",
+        "src/data_analysis.py",
+        "src/eda.py",
+        "app_dashboard.py",
+        "requirements.txt"
+    ]
+    
+    print("\n📁 STATUS DOS ARQUIVOS:")
+    print("-" * 40)
+    
+    for arquivo in arquivos_necessarios:
+        path = Path(arquivo)
+        status = "✅ Existe" if path.exists() else "❌ Não encontrado"
+        print(f"{arquivo:<25} {status}")
+    
+    # Verificar dependências
+    print("\n📦 DEPENDÊNCIAS:")
+    print("-" * 40)
+    
+    dependencias = [
+        "pandas", "numpy", "plotly", "streamlit", 
+        "requests", "matplotlib", "seaborn"
+    ]
+    
+    for dep in dependencias:
+        try:
+            __import__(dep)
+            print(f"{dep:<15} ✅ Instalado")
+        except ImportError:
+            print(f"{dep:<15} ❌ Não instalado")
+    
+    print("\n" + "="*50)
 
-# ──────────────────────────────────────────────────────────────
-#  PIPELINE
-# ──────────────────────────────────────────────────────────────
-
-def executar_pipeline() -> None:
-    """
-    Orquestra todas as etapas do pipeline de dados agrícolas.
-
-    Etapas:
-        1. coletar()          — requisições à API IBGE/SIDRA com retry
-        2. salvar_csv()       — dados brutos em data/raw/csv/
-        3. salvar_json()      — dados brutos em data/raw/json/
-        4. salvar_parquet()   — dados brutos em data/raw/parquet/ (Snappy)
-        5. salvar_manifesto() — metadados em data/raw/_manifesto.json
-
-    Raises:
-        SystemExit: se a coleta não retornar nenhum dado.
-    """
-    inicio = datetime.now()
-
-    log.info("=" * 55)
-    log.info("AGRO DATA PIPELINE — IBGE/SIDRA PAM Tabela %s", TABELA)
-    log.info("=" * 55)
-    log.info("Anos    : %s", ANOS)
-    log.info("Nível   : %s (%s)", NIVEL, NIVEIS[NIVEL])
-    log.info("Saída   : %s", PASTA_SAIDA.resolve())
-    log.info("=" * 55)
-
-    # ── Etapa 1: Coleta ──────────────────────────────────────
-    log.info("[1/4] Coletando dados da API IBGE/SIDRA...")
-    df = coletar()
-
-    if df.empty:
-        log.error("Nenhum dado coletado. Verifique a conexão com a internet.")
-        sys.exit(1)
-
-    log.info("      %d linhas × %d colunas coletadas.", len(df), len(df.columns))
-
-    # ── Etapa 2: Camada Raw ───────────────────────────────────
-    log.info("[2/4] Salvando camada Raw...")
-    nome = _nome_base()
-
-    arq_csv     = salvar_csv(df, nome)
-    arq_json    = salvar_json(df, nome)
-    arq_parquet = salvar_parquet(df, nome)
-
-    # ── Etapa 3: Manifesto ────────────────────────────────────
-    log.info("[3/4] Gravando manifesto...")
-    salvar_manifesto({
-        "csv"    : arq_csv,
-        "json"   : arq_json,
-        "parquet": arq_parquet,
-    })
-
-    # ── Etapa 4: Sumário ──────────────────────────────────────
-    log.info("[4/4] Sumário da execução:")
-    duracao = (datetime.now() - inicio).seconds
-    log.info("=" * 55)
-    log.info("  Produtos coletados : %d", df["produto"].nunique())
-    log.info("  Anos               : %s", sorted(df["ano"].dropna().unique().tolist()))
-    log.info("  Total de registros : %d", len(df))
-    log.info("  Arquivos gerados   :")
-    log.info("    CSV     → %s", arq_csv)
-    log.info("    JSON    → %s", arq_json)
-    if arq_parquet:
-        log.info("    Parquet → %s", arq_parquet)
-    log.info("  Duração            : %ds", duracao)
-    log.info("=" * 55)
-    log.info("Pipeline concluído com sucesso.")
-
-
-# ──────────────────────────────────────────────────────────────
-#  ENTRY POINT
-# ──────────────────────────────────────────────────────────────
+def main():
+    parser = argparse.ArgumentParser(
+        description="🌾 Sistema Agrícola - Pipeline e Dashboard",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Exemplos de uso:
+  python main.py              # Executa pipeline padrão
+  python main.py --dashboard  # Abre dashboard
+  python main.py --eda        # Executa análise exploratória  
+  python main.py --all        # Pipeline + Dashboard + EDA
+  python main.py --status     # Verifica status do sistema
+        """
+    )
+    
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--dashboard", 
+        action="store_true", 
+        help="Executa apenas o dashboard Streamlit"
+    )
+    group.add_argument(
+        "--eda",
+        action="store_true", 
+        help="Executa análise exploratória (gráficos)"
+    )
+    group.add_argument(
+        "--all", 
+        action="store_true", 
+        help="Executa pipeline + dashboard + EDA"
+    )
+    group.add_argument(
+        "--status", 
+        action="store_true", 
+        help="Verifica status dos arquivos e dependências"
+    )
+    
+    args = parser.parse_args()
+    
+    print("🌾" + "="*50 + "🌾")
+    print("    SISTEMA AGRÍCOLA - PIPELINE E DASHBOARD")
+    print("🌾" + "="*50 + "🌾")
+    
+    if args.dashboard:
+        executar_dashboard()
+    elif args.eda:
+        executar_eda()
+    elif args.all:
+        log.info("🚀 Executando sistema completo...")
+        if executar_pipeline():
+            log.info("⏳ Aguardando 3 segundos...")
+            time.sleep(3)
+            executar_eda()
+            log.info("⏳ Aguardando 2 segundos...")
+            time.sleep(2)
+            executar_dashboard()
+    elif args.status:
+        verificar_status()
+    else:
+        # Execução padrão - apenas pipeline
+        executar_pipeline()
 
 if __name__ == "__main__":
-    executar_pipeline()
+    main()

@@ -741,3 +741,202 @@
 2026-03-23 00:02:01 [INFO]   Duração            : 6s
 2026-03-23 00:02:01 [INFO] =======================================================
 2026-03-23 00:02:01 [INFO] Pipeline concluído com sucesso.
+2026-03-23 21:45:45 [INFO] =======================================================
+2026-03-23 21:45:45 [INFO] AGRO DATA PIPELINE — IBGE/SIDRA PAM Tabela 5457
+2026-03-23 21:45:45 [INFO] =======================================================
+2026-03-23 21:45:45 [INFO] Anos    : [2023, 2024]
+2026-03-23 21:45:45 [INFO] Nível   : brasil (n1/all)
+2026-03-23 21:45:45 [INFO] Saída   : C:\Users\Elbia\OneDrive\Área de Trabalho\AVALIACAO TECNICA  ANALISTA DE DADOS\agro-data-pipeline\data\raw
+2026-03-23 21:45:45 [INFO] =======================================================
+2026-03-23 21:45:45 [INFO] [1/4] Coletando dados da API IBGE/SIDRA...
+2026-03-23 21:45:45 [INFO] Coletando 20 produtos | 3 blocos | anos: [2023, 2024] | nível: brasil
+2026-03-23 21:45:45 [INFO] Bloco 1/3: soja, milho, algodao, amendoim, arroz, feijao, cafe, trigo
+2026-03-23 21:45:45 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40124,40125,40126,40127,40128,40131,40132,40133
+2026-03-23 21:45:45 [INFO] Bloco 1/3: 64 registros recebidos.
+2026-03-23 21:45:47 [INFO] Bloco 2/3: cana, mandioca, sorgo, girassol, aveia, cevada, triticale, laranja
+2026-03-23 21:45:47 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40135,40138,40141,40147,40148,40149,40150,40199
+2026-03-23 21:45:47 [INFO] Bloco 2/3: 64 registros recebidos.
+2026-03-23 21:45:49 [INFO] Bloco 3/3: banana, cacau, borracha, sisal
+2026-03-23 21:45:49 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40186,40190,40218,40228
+2026-03-23 21:45:49 [INFO] Bloco 3/3: 32 registros recebidos.
+2026-03-23 21:45:49 [INFO]       24 linhas × 15 colunas coletadas.
+2026-03-23 21:45:49 [INFO] [2/4] Salvando camada Raw...
+2026-03-23 21:45:49 [INFO] CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv  (6.4 KB)
+2026-03-23 21:45:49 [INFO] JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json  (15.8 KB)
+2026-03-23 21:45:49 [DEBUG] pyarrow versão: 21.0.0
+2026-03-23 21:45:49 [INFO] Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet  (10.6 KB)
+2026-03-23 21:45:49 [INFO] [3/4] Gravando manifesto...
+2026-03-23 21:45:50 [INFO] Manifesto → data\raw\_manifesto.json
+2026-03-23 21:45:50 [INFO] [4/4] Sumário da execução:
+2026-03-23 21:45:50 [INFO] =======================================================
+2026-03-23 21:45:50 [INFO]   Produtos coletados : 12
+2026-03-23 21:45:50 [INFO]   Anos               : [2023, 2024]
+2026-03-23 21:45:50 [INFO]   Total de registros : 24
+2026-03-23 21:45:50 [INFO]   Arquivos gerados   :
+2026-03-23 21:45:50 [INFO]     CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 21:45:50 [INFO]     JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json
+2026-03-23 21:45:50 [INFO]     Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet
+2026-03-23 21:45:50 [INFO]   Duração            : 4s
+2026-03-23 21:45:50 [INFO] =======================================================
+2026-03-23 21:45:50 [INFO] Pipeline concluído com sucesso.
+2026-03-23 21:52:04 [INFO] =======================================================
+2026-03-23 21:52:04 [INFO] AGRO DATA PIPELINE — IBGE/SIDRA PAM Tabela 5457
+2026-03-23 21:52:04 [INFO] =======================================================
+2026-03-23 21:52:04 [INFO] Anos    : [2023, 2024]
+2026-03-23 21:52:04 [INFO] Nível   : brasil (n1/all)
+2026-03-23 21:52:04 [INFO] Saída   : C:\Users\Elbia\OneDrive\Área de Trabalho\AVALIACAO TECNICA  ANALISTA DE DADOS\agro-data-pipeline\data\raw
+2026-03-23 21:52:04 [INFO] =======================================================
+2026-03-23 21:52:04 [INFO] [1/4] Coletando dados da API IBGE/SIDRA...
+2026-03-23 21:52:04 [INFO] Coletando 20 produtos | 3 blocos | anos: [2023, 2024] | nível: brasil
+2026-03-23 21:52:04 [INFO] Bloco 1/3: soja, milho, algodao, amendoim, arroz, feijao, cafe, trigo
+2026-03-23 21:52:04 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40124,40125,40126,40127,40128,40131,40132,40133
+2026-03-23 21:52:04 [INFO] Bloco 1/3: 64 registros recebidos.
+2026-03-23 21:52:07 [INFO] Bloco 2/3: cana, mandioca, sorgo, girassol, aveia, cevada, triticale, laranja
+2026-03-23 21:52:07 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40135,40138,40141,40147,40148,40149,40150,40199
+2026-03-23 21:52:07 [INFO] Bloco 2/3: 64 registros recebidos.
+2026-03-23 21:52:09 [INFO] Bloco 3/3: banana, cacau, borracha, sisal
+2026-03-23 21:52:09 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40186,40190,40218,40228
+2026-03-23 21:52:09 [INFO] Bloco 3/3: 32 registros recebidos.
+2026-03-23 21:52:09 [INFO]       24 linhas × 15 colunas coletadas.
+2026-03-23 21:52:09 [INFO] [2/4] Salvando camada Raw...
+2026-03-23 21:52:09 [INFO] CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv  (6.4 KB)
+2026-03-23 21:52:09 [INFO] JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json  (15.8 KB)
+2026-03-23 21:52:09 [DEBUG] pyarrow versão: 21.0.0
+2026-03-23 21:52:09 [INFO] Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet  (10.6 KB)
+2026-03-23 21:52:09 [INFO] [3/4] Gravando manifesto...
+2026-03-23 21:52:09 [INFO] Manifesto → data\raw\_manifesto.json
+2026-03-23 21:52:09 [INFO] [4/4] Sumário da execução:
+2026-03-23 21:52:09 [INFO] =======================================================
+2026-03-23 21:52:09 [INFO]   Produtos coletados : 12
+2026-03-23 21:52:09 [INFO]   Anos               : [2023, 2024]
+2026-03-23 21:52:09 [INFO]   Total de registros : 24
+2026-03-23 21:52:09 [INFO]   Arquivos gerados   :
+2026-03-23 21:52:09 [INFO]     CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 21:52:09 [INFO]     JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json
+2026-03-23 21:52:09 [INFO]     Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet
+2026-03-23 21:52:09 [INFO]   Duração            : 5s
+2026-03-23 21:52:09 [INFO] =======================================================
+2026-03-23 21:52:09 [INFO] Pipeline concluído com sucesso.
+2026-03-23 21:52:27 [INFO] Criando app_dashboard.py...
+2026-03-23 21:52:27 [INFO] ✅ Arquivo app_dashboard.py criado com sucesso.
+2026-03-23 21:52:27 [INFO] 🚀 Iniciando dashboard Streamlit...
+2026-03-23 21:52:27 [INFO] 📊 Dashboard será aberto em: http://localhost:8501
+2026-03-23 21:52:27 [INFO] ⏹️  Para parar: Ctrl+C
+2026-03-23 21:52:27 [INFO] =======================================================
+2026-03-23 21:53:49 [INFO] =======================================================
+2026-03-23 21:53:49 [INFO] AGRO DATA PIPELINE — IBGE/SIDRA PAM Tabela 5457
+2026-03-23 21:53:49 [INFO] =======================================================
+2026-03-23 21:53:49 [INFO] Anos    : [2023, 2024]
+2026-03-23 21:53:49 [INFO] Nível   : brasil (n1/all)
+2026-03-23 21:53:49 [INFO] Saída   : C:\Users\Elbia\OneDrive\Área de Trabalho\AVALIACAO TECNICA  ANALISTA DE DADOS\agro-data-pipeline\data\raw
+2026-03-23 21:53:49 [INFO] =======================================================
+2026-03-23 21:53:49 [INFO] [1/4] Coletando dados da API IBGE/SIDRA...
+2026-03-23 21:53:49 [INFO] Coletando 20 produtos | 3 blocos | anos: [2023, 2024] | nível: brasil
+2026-03-23 21:53:49 [INFO] Bloco 1/3: soja, milho, algodao, amendoim, arroz, feijao, cafe, trigo
+2026-03-23 21:53:49 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40124,40125,40126,40127,40128,40131,40132,40133
+2026-03-23 21:53:49 [INFO] Bloco 1/3: 64 registros recebidos.
+2026-03-23 21:53:52 [INFO] Bloco 2/3: cana, mandioca, sorgo, girassol, aveia, cevada, triticale, laranja
+2026-03-23 21:53:52 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40135,40138,40141,40147,40148,40149,40150,40199
+2026-03-23 21:53:52 [INFO] Bloco 2/3: 64 registros recebidos.
+2026-03-23 21:53:53 [INFO] Bloco 3/3: banana, cacau, borracha, sisal
+2026-03-23 21:53:53 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40186,40190,40218,40228
+2026-03-23 21:53:53 [INFO] Bloco 3/3: 32 registros recebidos.
+2026-03-23 21:53:53 [INFO]       24 linhas × 15 colunas coletadas.
+2026-03-23 21:53:53 [INFO] [2/4] Salvando camada Raw...
+2026-03-23 21:53:53 [INFO] CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv  (6.4 KB)
+2026-03-23 21:53:53 [INFO] JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json  (15.8 KB)
+2026-03-23 21:53:53 [DEBUG] pyarrow versão: 21.0.0
+2026-03-23 21:53:53 [INFO] Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet  (10.6 KB)
+2026-03-23 21:53:53 [INFO] [3/4] Gravando manifesto...
+2026-03-23 21:53:53 [INFO] Manifesto → data\raw\_manifesto.json
+2026-03-23 21:53:53 [INFO] [4/4] Sumário da execução:
+2026-03-23 21:53:53 [INFO] =======================================================
+2026-03-23 21:53:53 [INFO]   Produtos coletados : 12
+2026-03-23 21:53:53 [INFO]   Anos               : [2023, 2024]
+2026-03-23 21:53:53 [INFO]   Total de registros : 24
+2026-03-23 21:53:53 [INFO]   Arquivos gerados   :
+2026-03-23 21:53:53 [INFO]     CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 21:53:53 [INFO]     JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json
+2026-03-23 21:53:53 [INFO]     Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet
+2026-03-23 21:53:53 [INFO]   Duração            : 4s
+2026-03-23 21:53:53 [INFO] =======================================================
+2026-03-23 21:53:53 [INFO] Pipeline concluído com sucesso.
+2026-03-23 21:54:09 [INFO] Arquivo app_dashboard.py já existe.
+2026-03-23 21:54:09 [INFO] 🚀 Iniciando dashboard Streamlit...
+2026-03-23 21:54:09 [INFO] 📊 Dashboard será aberto em: http://localhost:8501
+2026-03-23 21:54:09 [INFO] ⏹️  Para parar: Ctrl+C
+2026-03-23 21:54:09 [INFO] =======================================================
+2026-03-23 22:05:35 [INFO] Arquivo app_dashboard.py já existe.
+2026-03-23 22:05:35 [INFO] 🚀 Iniciando dashboard Streamlit...
+2026-03-23 22:05:35 [INFO] 📊 Dashboard será aberto em: http://localhost:8501
+2026-03-23 22:05:35 [INFO] ⏹️  Para parar: Ctrl+C
+2026-03-23 22:05:35 [INFO] =======================================================
+2026-03-23 22:07:14 [INFO] Arquivo app_dashboard.py já existe.
+2026-03-23 22:07:14 [INFO] 🚀 Iniciando dashboard Streamlit...
+2026-03-23 22:07:14 [INFO] 📊 Dashboard será aberto em: http://localhost:8501
+2026-03-23 22:07:14 [INFO] ⏹️  Para parar: Ctrl+C
+2026-03-23 22:07:14 [INFO] =======================================================
+2026-03-23 22:25:13 [INFO] =======================================================
+2026-03-23 22:25:13 [INFO] AGRO DATA PIPELINE — IBGE/SIDRA PAM Tabela 5457
+2026-03-23 22:25:13 [INFO] =======================================================
+2026-03-23 22:25:13 [INFO] Anos    : [2023, 2024]
+2026-03-23 22:25:13 [INFO] Nível   : brasil (n1/all)
+2026-03-23 22:25:13 [INFO] Saída   : C:\Users\Elbia\OneDrive\Área de Trabalho\AVALIACAO TECNICA  ANALISTA DE DADOS\agro-data-pipeline\data\raw
+2026-03-23 22:25:13 [INFO] =======================================================
+2026-03-23 22:25:13 [INFO] [1/4] Coletando dados da API IBGE/SIDRA...
+2026-03-23 22:25:13 [INFO] Coletando 20 produtos | 3 blocos | anos: [2023, 2024] | nível: brasil
+2026-03-23 22:25:13 [INFO] Bloco 1/3: soja, milho, algodao, amendoim, arroz, feijao, cafe, trigo
+2026-03-23 22:25:13 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40124,40125,40126,40127,40128,40131,40132,40133
+2026-03-23 22:25:13 [INFO] Bloco 1/3: 64 registros recebidos.
+2026-03-23 22:25:16 [INFO] Bloco 2/3: cana, mandioca, sorgo, girassol, aveia, cevada, triticale, laranja
+2026-03-23 22:25:16 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40135,40138,40141,40147,40148,40149,40150,40199
+2026-03-23 22:25:16 [INFO] Bloco 2/3: 64 registros recebidos.
+2026-03-23 22:25:18 [INFO] Bloco 3/3: banana, cacau, borracha, sisal
+2026-03-23 22:25:18 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40186,40190,40218,40228
+2026-03-23 22:25:18 [INFO] Bloco 3/3: 32 registros recebidos.
+2026-03-23 22:25:18 [INFO]       24 linhas × 15 colunas coletadas.
+2026-03-23 22:25:18 [INFO] [2/4] Salvando camada Raw...
+2026-03-23 22:25:18 [INFO] CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv  (6.4 KB)
+2026-03-23 22:25:18 [INFO] JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json  (15.8 KB)
+2026-03-23 22:25:18 [DEBUG] pyarrow versão: 21.0.0
+2026-03-23 22:25:18 [INFO] Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet  (10.6 KB)
+2026-03-23 22:25:18 [INFO] [3/4] Gravando manifesto...
+2026-03-23 22:25:18 [INFO] Manifesto → data\raw\_manifesto.json
+2026-03-23 22:25:18 [INFO] [4/4] Sumário da execução:
+2026-03-23 22:25:18 [INFO] =======================================================
+2026-03-23 22:25:18 [INFO]   Produtos coletados : 12
+2026-03-23 22:25:18 [INFO]   Anos               : [2023, 2024]
+2026-03-23 22:25:18 [INFO]   Total de registros : 24
+2026-03-23 22:25:18 [INFO]   Arquivos gerados   :
+2026-03-23 22:25:18 [INFO]     CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv
+2026-03-23 22:25:18 [INFO]     JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json
+2026-03-23 22:25:18 [INFO]     Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet
+2026-03-23 22:25:18 [INFO]   Duração            : 4s
+2026-03-23 22:25:18 [INFO] =======================================================
+2026-03-23 22:25:18 [INFO] Pipeline concluído com sucesso.
+2026-03-23 22:39:15 [INFO] =======================================================
+2026-03-23 22:39:15 [INFO] AGRO DATA PIPELINE — IBGE/SIDRA PAM Tabela 5457
+2026-03-23 22:39:15 [INFO] =======================================================
+2026-03-23 22:39:15 [INFO] Anos    : [2023, 2024]
+2026-03-23 22:39:15 [INFO] Nível   : brasil (n1/all)
+2026-03-23 22:39:15 [INFO] Saída   : C:\Users\Elbia\OneDrive\Área de Trabalho\AVALIACAO TECNICA  ANALISTA DE DADOS\agro-data-pipeline\data\raw
+2026-03-23 22:39:15 [INFO] =======================================================
+2026-03-23 22:39:15 [INFO] [1/4] Coletando dados da API IBGE/SIDRA...
+2026-03-23 22:39:15 [INFO] Coletando 20 produtos | 3 blocos | anos: [2023, 2024] | nível: brasil
+2026-03-23 22:39:15 [INFO] Bloco 1/3: soja, milho, algodao, amendoim, arroz, feijao, cafe, trigo
+2026-03-23 22:39:15 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40124,40125,40126,40127,40128,40131,40132,40133
+2026-03-23 22:39:15 [INFO] Bloco 1/3: 64 registros recebidos.
+2026-03-23 22:39:17 [INFO] Bloco 2/3: cana, mandioca, sorgo, girassol, aveia, cevada, triticale, laranja
+2026-03-23 22:39:17 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40135,40138,40141,40147,40148,40149,40150,40199
+2026-03-23 22:39:17 [INFO] Bloco 2/3: 64 registros recebidos.
+2026-03-23 22:39:20 [INFO] Bloco 3/3: banana, cacau, borracha, sisal
+2026-03-23 22:39:20 [DEBUG] GET https://apisidra.ibge.gov.br/values/t/5457/n1/all/v/214,215,112,216/p/2023,2024/c782/40186,40190,40218,40228
+2026-03-23 22:39:20 [INFO] Bloco 3/3: 32 registros recebidos.
+2026-03-23 22:39:21 [INFO]       24 linhas × 15 colunas coletadas.
+2026-03-23 22:39:21 [INFO] [2/4] Salvando camada Raw...
+2026-03-23 22:39:21 [INFO] CSV     → data\raw\csv\ibge_pam_brasil_2023_2024_20260323.csv  (6.4 KB)
+2026-03-23 22:39:21 [INFO] JSON    → data\raw\json\ibge_pam_brasil_2023_2024_20260323.json  (15.8 KB)
+2026-03-23 22:39:21 [DEBUG] pyarrow versão: 21.0.0
+2026-03-23 22:39:21 [INFO] Parquet → data\raw\parquet\ibge_pam_brasil_2023_2024_20260323.parquet  (10.6 KB)
+2026-03-23 22:39:21 [INFO] [3/4] Gravando manifesto...
+2026-03-23 22:39:21 [ERROR] ❌ Erro durante a execução: 'str' object has no attribute 'stat'

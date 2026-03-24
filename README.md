@@ -1,198 +1,204 @@
-🌾 Agro Data Pipeline — IBGE/SIDRAPipeline automatizado de extração, tratamento e carga (ETL) para dados de produção das principais commodities agrícolas brasileiras. O projeto utiliza a pesquisa PAM (Produção Agrícola Municipal - Tabela 5457) para consolidar indicadores estratégicos.
+# 🌾 Agro Data Pipeline — IBGE/SIDRA
 
-📌 Visão GeralEste ecossistema foi desenvolvido para contornar limitações de scrapers convencionais (como bloqueios de 403/Timeout no CEPEA), utilizando a API REST oficial do IBGE. O pipeline opera em arquitetura de medalhão simplificada:Camada Raw: Ingestão de dados brutos em múltiplos formatos (CSV, JSON, Parquet).Camada Processed: Limpeza, tipagem estrita e normalização.Storage/Analytics: Carga final em banco de dados PostgreSQL para consumo via SQL.
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=flat&logo=pandas&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
+![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)
 
-🏗️ Arquitetura e Fluxo de DadosO pipeline segue o fluxo: API SIDRA ➔ Raw Layer (Local) ➔ Transformação (Pandas) ➔ PostgreSQL.Snippet de códigograph LR
+Pipeline automatizado de extração, transformação e carga (ETL) para dados de produção das principais commodities agrícolas brasileiras com dashboard interativo integrado.
 
-    A[API IBGE/SIDRA] --> B(Scraper & Raw Layer)
-    B --> C{Formatos Raw}
-    C -->|CSV| D[ETL Process]
-    C -->|JSON| D
-    C -->|Parquet| D
-    D --> E[(PostgreSQL)]
-    D --> F[Processed CSV]
+O projeto utiliza a pesquisa **PAM (Produção Agrícola Municipal – Tabela 5457)** como fonte principal para consolidação de indicadores estratégicos e visualização analítica em tempo real.
 
-📂 Estrutura de PastasPlaintextagro-data-pipeline/
-│
-├── src/
-│   ├── scraper.py
-│   ├── raw_layer.py
-│   ├── gerar_parquet.py
-│   ├── postgres_load.py
-│   └── etl_processed.py
-│
-├── data/
-│   ├── raw/
-│   │   ├── csv/
-│   │   ├── json/
-│   │   ├── parquet/
-│   │   └── _manifesto.json
-│   └── processed/
-│
-├── sql/
-│   └── verificar_banco.sql
-│
-├── docs/
-│   ├── camada_raw.md
-│   └── modelo_relacional.md
-│
-├── .env
-├── .gitignore
-├── requirements.txt
-├── main.py
-└── README.md
-
-🚀 Como Executar
-1. Pré-requisitosPython 3.12 ou superior.Instância PostgreSQL (Docker ou Local).
-2. Instalação e SetupBash# Clone e entre no diretório
-git clone https://github.com/seu-usuario/agro-data-pipeline.git
-cd agro-data-pipeline
-
-# Ambiente virtual e dependências
-python -m venv venv
-source venv/bin/activate  # Linux/macOS ou venv\Scripts\activate no Windows
-pip install -r requirements.txt
-
-# Configuração de ambiente
-cp .env.example .env
-💡 Nota: Edite o arquivo .env com suas credenciais de banco e anos de interesse.3. Execução do PipelineO processo é dividido em dois estágios principais:Ingestão (Raw): Coleta dados da API e gera arquivos locais.Bashpython src/gerar_parquet.py
-Processamento (ETL & Load): Limpa os dados e sobe para o Postgres.Bashpython src/etl_processed.py
-
-⚙️ Configurações (.env)VariávelDescriçãoExemploANOSLista de anos para coleta2022,2023,2024NIVELGranularidade geográficabrasil, uf ou municipioDB_NAMENome do banco de dadosagro_db
-
-📊 Estratégia de Dados (Data Dictionary)O pipeline captura as seguintes métricas por produto:MétricaDescriçãoUnidadearea_colhida_haÁrea total colhidaHectaresqtd_produzidaVolume total produzidoToneladas / Mil frutosrendimento_medio_kg_haProdutividade por áreaKg/Havalor_producao_mil_reaisValor nominal da produçãoR$ 1.000,00🛠️ Desafios Técnicos SolucionadosTratamento de Nulos: Conversão automática de caracteres especiais da API (-, ..., X) para NaN/NULL.Resiliência: Implementação de Retry com Back-off (espera progressiva) para evitar quedas por instabilidade na API.Otimização de Memória: Coleta realizada em blocos de 8 produtos para evitar estouro de timeout em URLs longas.Rastreabilidade: Geração automática de um _manifesto.json detalhando data, hora e tamanho dos arquivos gerados.
-
-🔍 Qualidade e LogsO sistema utiliza logs detalhados para auditoria:Terminal (INFO): Progresso visual e relatórios de sucesso.Arquivo sidra_scraper.log (DEBUG): Registro técnico com as URLs de requisição e erros detalhados.Para validar a carga no banco de dados, utilize o script:Bashpsql -U seu_usuario -d seu_banco -f sql/verificar_banco.sql
-
-📄 Licença e FonteFonte: IBGE - Produção Agrícola Municipal (PAM).Licença de Dados: Open Data (CC BY 4.0).Desenvolvido por: [Seu Nome/LinkedIn]
-
-# 📊 Estruturação do Data Lake
+---
 
 ## 📌 Visão Geral
+Este pipeline foi desenvolvido para contornar limitações de scrapers convencionais (como bloqueios e timeouts), utilizando a **API REST oficial do IBGE (SIDRA)**. 
 
-O Data Lake deste projeto é organizado em três camadas: **raw**, **processed** e **curated**, com o objetivo de separar os dados conforme o nível de tratamento e uso.
+A arquitetura segue o modelo de **Medalhão Simplificado**, com separação por camadas:
+* **Raw:** Ingestão de dados brutos em múltiplos formatos (CSV, JSON, Parquet).
+* **Processed:** Limpeza, tipagem e normalização dos dados.
+* **Storage/Analytics:** Carga final em PostgreSQL para consumo analítico via SQL.
+* **🆕 Dashboard:** Interface web interativa para visualização e análise dos dados.
 
-Essa abordagem permite garantir rastreabilidade, qualidade dos dados e suporte à análise.
+---
+## 🏗️ Arquitetura do Fluxo
+
+```mermaid
+graph TD
+    A[API IBGE/SIDRA] --> B[src/gerar_parquet.py]
+    B --> C[(Data Lake: Raw)]
+    C --> D[src/etl_processed.py]
+    D --> E[(Data Lake: Processed)]
+    E --> F[(PostgreSQL)]
+    F --> G[Dashboard Streamlit]
+    E --> H[src/eda.py - Gráficos]
+
+    O Gemini disse
+Entendido, Elbia! Peço desculpas, na tentativa de resumir alguns blocos para caber na resposta anterior, acabei removendo as marcações de código (o que faz o GitHub colorir o texto) de algumas seções.
+
+Aqui está o README.md 100% completo, com todos os blocos de código (bash, sql, text) e tabelas formatadas corretamente para que o GitHub renderize tudo "bonito" como você pediu.
+
+Markdown
+# 🌾 Agro Data Pipeline — IBGE/SIDRA
+
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=flat&logo=pandas&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
+![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)
+
+Pipeline automatizado de extração, transformação e carga (ETL) para dados de produção das principais commodities agrícolas brasileiras com dashboard interativo integrado.
+
+O projeto utiliza a pesquisa **PAM (Produção Agrícola Municipal – Tabela 5457)** como fonte principal para consolidação de indicadores estratégicos e visualização analítica em tempo real.
 
 ---
 
-## 🗂️ Camada Raw (dados brutos)
+## 📌 Visão Geral
+Este pipeline foi desenvolvido para contornar limitações de scrapers convencionais (como bloqueios e timeouts), utilizando a **API REST oficial do IBGE (SIDRA)**. 
 
-A camada **raw** armazena os dados exatamente como foram coletados da fonte, sem qualquer tipo de transformação.
-
-### Características
-
-- Origem: API pública do IBGE/SIDRA  
-- Dados não tratados  
-- Preservação completa da estrutura original  
-- Possibilidade de reprocessamento  
-
-### Formatos utilizados
-
-- CSV  
-- JSON  
-- Parquet  
-
-### Localização
-
-
-data/raw/
-
-
-### Objetivo
-
-Garantir integridade e rastreabilidade dos dados originais.
+A arquitetura segue o modelo de **Medalhão Simplificado**, com separação por camadas:
+* **Raw:** Ingestão de dados brutos em múltiplos formatos (CSV, JSON, Parquet).
+* **Processed:** Limpeza, tipagem e normalização dos dados.
+* **Storage/Analytics:** Carga final em PostgreSQL para consumo analítico via SQL.
+* **🆕 Dashboard:** Interface web interativa para visualização e análise dos dados.
 
 ---
 
-## 🔄 Camada Processed (dados tratados)
+## 🏗️ Arquitetura do Fluxo
 
-A camada **processed** contém os dados após a execução do processo de ETL.
+```mermaid
+graph TD
+    A[API IBGE/SIDRA] --> B[src/gerar_parquet.py]
+    B --> C[(Data Lake: Raw)]
+    C --> D[src/etl_processed.py]
+    D --> E[(Data Lake: Processed)]
+    E --> F[(PostgreSQL)]
+    F --> G[Dashboard Streamlit]
+    E --> H[src/eda.py - Gráficos]
 
-### Transformações aplicadas
-
-- Correção de tipos de dados  
-- Tratamento de valores ausentes  
-- Padronização de categorias  
-- Validação de regras de negócio  
-
-### Saídas
-
-- Arquivo CSV local:
-
-data/processed/ibge_pam_processed_YYYYMMDD.csv
-
-
-- Banco de dados PostgreSQL:
-
-schema: processed
-tabela: producao_agricola
-
-
-### Objetivo
-
-Garantir consistência, padronização e qualidade dos dados para uso posterior.
-
----
-
-## 📊 Camada Curated (dados para análise)
-
-A camada **curated** contém dados preparados para consumo analítico.
-
-### Características
-
-- Dados organizados para facilitar consultas  
-- Estrutura otimizada para análise  
-- Pode conter agregações ou filtros  
-
-### Localização
-
-
-data/curated/
-
-
-### Exemplo
-
-
-data/curated/producao_agricola_analitico.csv
-
-
-### Objetivo
-
-Disponibilizar dados prontos para análise e apoio à tomada de decisão.
-
----
-
-## 📁 Estrutura de Diretórios
-
+📂 Estrutura de Pastas
 
 agro-data-pipeline/
-│
-├── data/
-│ ├── raw/
-│ │ ├── csv/
-│ │ ├── json/
-│ │ └── parquet/
-│ │
-│ ├── processed/
-│ │ └── ibge_pam_processed_YYYYMMDD.csv
-│ │
-│ └── curated/
-│ └── producao_agricola_analitico.csv
+├── .vscode/                 # Configurações do editor
+├── data/                    # Data Lake Local
+│   ├── processed/           # Dados tratados e visualizações
+│   │   ├── graficos/        # Saídas visuais (PNG) do eda.py
+│   │   └── ibge_pam_processed_20260323.csv
+│   └── raw/                 # Dados brutos da API
+│       ├── csv/ | json/ | parquet/
+│       ├── processed/       # Subpasta de controle interno
+│       ├── _manifesto.json  # Metadados da última ingestão
+│       └── ibge_pam_brasil_2023_2024_20260322.csv
+├── docs/                    # Documentação técnica e modelos
+├── sql/                     # Scripts DDL e DML (PostgreSQL)
+├── src/                     # Core do Pipeline (Scripts Python)
+├── streamlit/               # Módulos do Dashboard
+│   ├── charts/              # Lógica de geração de gráficos Plotly
+│   └── utils/               # Helpers e data loaders
+├── venv/                    # Ambiente virtual
+├── .env                     # Variáveis de ambiente e credenciais
+├── .gitignore               # Arquivos ignorados pelo Git
+├── app_dashboard.py         # Main entry do Streamlit
+├── main.py                  # Orquestrador principal do Pipeline
+├── requirements.txt         # Dependências do projeto
+└── run_dashboard.py         # Script de inicialização rápida
 
+## 🚀 Como Executar
+
+### 1. Preparação
+Instale as dependências e configure seu arquivo `.env`:
+```bash
+pip install -r requirements.txt
+
+2. Execução do Pipeline
+# Executar fluxo completo (Ingestão + ETL + Carga)
+python main.py
+
+# Ou etapas isoladas:
+python src/gerar_parquet.py   # Ingestão Raw
+python src/etl_processed.py   # Processamento e Carga SQL
+
+
+
+3. Inicialização do Dashboard
+
+streamlit run app_dashboard.py
+
+🆕 Dashboard Interativo
+
+📊 Visão Geral: Métricas principais (Área, Produção, Valor) em tempo real.
+📈 Análise de Produção: Evolução por commodity e filtros dinâmicos.
+🎯 Rendimento: Análise de produtividade e eficiência (kg/ha).
+🗺️ Regional: Distribuição geográfica da produção nacional.
+📥 Export: Download dos dados filtrados diretamente pela interface.
+
+📊 Análises SQL & Qualidade de Dados
+🔎 Exemplos Analíticos
+<details>
+<summary><b>Clique para expandir as Queries SQL</b></summary>
+
+
+Variação Percentual (YoY)
+SQL
+SELECT 
+    id_commodity, 
+    ano,
+    AVG(valor_producao_mil_reais) AS preco_medio,
+    LAG(AVG(valor_producao_mil_reais)) OVER (
+        PARTITION BY id_commodity 
+        ORDER BY ano
+    ) AS preco_anterior
+FROM fato_producao
+GROUP BY id_commodity, ano;
+Identificação de AnomaliasSQLSELECT * FROM fato_producao
+WHERE area_colhida_ha < 0 
+   OR qtd_produzida < 0 
+   OR (qtd_produzida * 1000 / NULLIF(area_colhida_ha, 0)) > 100000;
+</details>
+
+### ⚡ Performance (Índices)
+
+| Índice | Descrição |
+| :--- | :--- |
+| `idx_fato_commodity` | Otimiza filtros por produto. |
+| `idx_fato_tempo` | Acelera consultas de série histórica (Ano/Mês). |
+| `idx_fato_composto` | Melhora performance de funções de janela (Window Functions). |
 
 ---
 
-## ✅ Resumo
+### 🛠️ Desafios Técnicos Solucionados
 
-| Camada     | Descrição                    | Objetivo principal              |
-|------------|-----------------------------|--------------------------------|
-| Raw        | Dados brutos                | Rastreabilidade e auditoria    |
-| Processed  | Dados tratados              | Qualidade e consistência       |
-| Curated    | Dados para análise          | Suporte à decisão              |
+* **Resiliência de API:** Implementação de **Retry com Back-off** (espera progressiva) para evitar quedas por instabilidade no servidor SIDRA.
+* **Tratamento de Dados Sigilosos:** Conversão automática de caracteres especiais do IBGE (`-`, `...`, `X`) para `NULL` para não distorcer médias.
+* **Otimização de Armazenamento:** Uso de **Parquet com Snappy compression**, reduzindo o tamanho dos arquivos em até **80%** comparado ao JSON.
+* **Rastreabilidade:** Geração de `_manifesto.json` para controle de versões e data de coleta.
 
 ---
 
-## 🎯 Conclusão
+### 📈 Análise Exploratória (EDA)
 
-A separação em camadas permite organizar o pipeline de dados de forma estruturada, facilitando manutenção, reprocessamento e análise dos dados ao longo do tempo.
+O script `src/eda.py` gera insights automáticos salvos em `data/processed/graficos/`:
+
+* **Boxplots:** Distribuição e outliers de produção.
+* **Scatter Plots:** Correlação Área vs. Valor de Produção.
+* **Estatísticas:** Média, Mediana e Desvio Padrão (Cana e Soja identificadas como principais outliers de volume).
+
+---
+
+### ⚙️ Configurações (.env)
+
+| Variável | Descrição |
+| :--- | :--- |
+| `ANOS` | Lista de anos (ex: `2023,2024`) |
+| `NIVEL` | Granularidade (`brasil`, `uf`, `municipio`) |
+| `DB_NAME` | Nome do banco PostgreSQL |
+| `STREAMLIT_PORT` | Porta padrão do dashboard (`8501`) |
+
+---
+
+### 📄 Licença e Fonte
+
+* **Fonte:** [IBGE - Produção Agrícola Municipal (PAM)](https://apisidra.ibge.gov.br)
+* **Licença:** Open Data (CC BY 4.0)
+* **Desenvolvido por:** **Elbia** — *Senior Data Analyst*

@@ -8,22 +8,22 @@
     2023,
     2024
   ],
-  "gerado_em": "2026-03-23 00:02:01",
+  "gerado_em": "2026-03-23 22:25:18",
   "arquivos": {
     "csv": {
       "path": "data\\raw\\csv\\ibge_pam_brasil_2023_2024_20260323.csv",
       "tamanho_kb": 6.37,
-      "salvo_em": "2026-03-23 00:02:01"
+      "salvo_em": "2026-03-23 22:25:18"
     },
     "json": {
       "path": "data\\raw\\json\\ibge_pam_brasil_2023_2024_20260323.json",
       "tamanho_kb": 15.81,
-      "salvo_em": "2026-03-23 00:02:01"
+      "salvo_em": "2026-03-23 22:25:18"
     },
     "parquet": {
       "path": "data\\raw\\parquet\\ibge_pam_brasil_2023_2024_20260323.parquet",
       "tamanho_kb": 10.62,
-      "salvo_em": "2026-03-23 00:02:01"
+      "salvo_em": "2026-03-23 22:25:18"
     }
   }
 }
