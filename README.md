@@ -24,7 +24,7 @@ A arquitetura segue o modelo de **Medalhão Simplificado**, com separação por 
 ---
 ## 🏗️ Arquitetura do Fluxo
 
-```
+```mermaid
 graph TD
     A[API IBGE/SIDRA] --> B[src/gerar_parquet.py]
     B --> C[(Data Lake: Raw)]
@@ -158,4 +158,4 @@ O script `src/eda.py` gera insights automáticos salvos em `data/processed/grafi
 
 * **Fonte:** [IBGE - Produção Agrícola Municipal (PAM)](https://apisidra.ibge.gov.br)
 * **Licença:** Open Data (CC BY 4.0)
-* **Desenvolvido por:** **Elbia Buglio** *
+* **Desenvolvido por:** **Elbia** — *Senior Data Analyst*
