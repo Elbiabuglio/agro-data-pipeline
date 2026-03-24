@@ -34,34 +34,6 @@ graph TD
     F --> G[Dashboard Streamlit]
     E --> H[src/eda.py - Gráficos]
 
-    O Gemini disse
-Entendido, Elbia! Peço desculpas, na tentativa de resumir alguns blocos para caber na resposta anterior, acabei removendo as marcações de código (o que faz o GitHub colorir o texto) de algumas seções.
-
-Aqui está o README.md 100% completo, com todos os blocos de código (bash, sql, text) e tabelas formatadas corretamente para que o GitHub renderize tudo "bonito" como você pediu.
-
-Markdown
-# 🌾 Agro Data Pipeline — IBGE/SIDRA
-
-![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
-![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=flat&logo=pandas&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
-![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)
-
-Pipeline automatizado de extração, transformação e carga (ETL) para dados de produção das principais commodities agrícolas brasileiras com dashboard interativo integrado.
-
-O projeto utiliza a pesquisa **PAM (Produção Agrícola Municipal – Tabela 5457)** como fonte principal para consolidação de indicadores estratégicos e visualização analítica em tempo real.
-
----
-
-## 📌 Visão Geral
-Este pipeline foi desenvolvido para contornar limitações de scrapers convencionais (como bloqueios e timeouts), utilizando a **API REST oficial do IBGE (SIDRA)**. 
-
-A arquitetura segue o modelo de **Medalhão Simplificado**, com separação por camadas:
-* **Raw:** Ingestão de dados brutos em múltiplos formatos (CSV, JSON, Parquet).
-* **Processed:** Limpeza, tipagem e normalização dos dados.
-* **Storage/Analytics:** Carga final em PostgreSQL para consumo analítico via SQL.
-
 ---
 
 ## 🏗️ Arquitetura do Fluxo
