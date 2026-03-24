@@ -172,4 +172,8 @@ O script `src/eda.py` gera insights automáticos salvos em `data/processed/grafi
 
 * **Fonte:** [IBGE - Produção Agrícola Municipal (PAM)](https://apisidra.ibge.gov.br)
 * **Licença:** Open Data (CC BY 4.0)
+<<<<<<< HEAD
 * **Desenvolvido por:** **Elbia Buglio** —
+=======
+* **Desenvolvido por:** **Elbia Buglio** 
+>>>>>>> 986865a6d239d13cfb4c08e8bc6c10950cc9b231
