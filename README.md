@@ -78,17 +78,31 @@ python src/etl_processed.py   # Processamento e Carga SQL
 
 
 
-3. Inicialização do Dashboard
+### 3. Dashboard Interativo
 
-streamlit run app_dashboard.py
+O dashboard pode ser acessado localmente ou através do deploy oficial:
 
-🆕 Dashboard Interativo
+* **🌐 Deploy Online:** [agro-analytics-brasil.streamlit.app](https://agro-analytics-brasil.streamlit.app/)
+* **💻 Execução Local:** ```bash
+    streamlit run app_dashboard.py
+    ```
 
-📊 Visão Geral: Métricas principais (Área, Produção, Valor) em tempo real.
-📈 Análise de Produção: Evolução por commodity e filtros dinâmicos.
-🎯 Rendimento: Análise de produtividade e eficiência (kg/ha).
-🗺️ Regional: Distribuição geográfica da produção nacional.
-📥 Export: Download dos dados filtrados diretamente pela interface.
+---
+
+### 🆕 Dashboard Interativo (Streamlit)
+
+A aplicação foi desenvolvida para fornecer uma interface analítica robusta, atendendo aos seguintes requisitos:
+
+* **📊 Dashboards de Tendências:** Visualização dinâmica de preços, volumes de produção e comportamento das safras ao longo do tempo.
+* **🔍 Filtros Inteligentes:** Permite segmentação granular por:
+    * **Produto:** Seleção das principais commodities (Soja, Milho, Cana, etc).
+    * **Região:** Filtros por nível nacional ou estadual.
+    * **Período:** Série histórica baseada nos anos selecionados no pipeline.
+* **📈 Gráficos Interativos:** Implementação utilizando **Plotly** para:
+    * **Linhas:** Evolução temporal e tendências.
+    * **Barras:** Rankings de produção e valor por produto/região.
+    * **Boxplots:** Identificação visual de outliers e variabilidade de rendimento.
+
 
 📊 Análises SQL & Qualidade de Dados
 🔎 Exemplos Analíticos
