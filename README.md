@@ -25,14 +25,10 @@ A arquitetura segue o modelo de **Medalhão Simplificado**, com separação por 
 ## 🏗️ Arquitetura do Fluxo
 
 ```
-graph TD
-    A[API IBGE/SIDRA] --> B[src/gerar_parquet.py]
-    B --> C[(Data Lake: Raw)]
-    C --> D[src/etl_processed.py]
-    D --> E[(Data Lake: Processed)]
-    E --> F[(PostgreSQL)]
-    F --> G[Dashboard Streamlit]
-    E --> H[src/eda.py - Gráficos]
+<p align="center">
+  <img src="./img/pipeline.png" alt="Fluxo de Dados" width="800">
+</p>
+
 
 📂 Estrutura de Pastas
 
